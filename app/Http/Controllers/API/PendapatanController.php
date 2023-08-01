@@ -35,7 +35,7 @@ class PendapatanController extends Controller
             ]);
 
             return ResponseFormatter::success(
-                $pendapatan,
+                $pendapatan->load('kategori'),
                 'Create Pendapatan Successfully'
             );
         } catch (ValidationException $error) {
@@ -64,13 +64,10 @@ class PendapatanController extends Controller
     {
         $user_id = $request->input('user_id');
         $limit = $request->input('limit');
-        $jumlah = $request->input('jumlah');
-        $pengirim = $request->input('pengirim');
-        $deskripsi = $request->input('deskripsi');
-        $kategori_id = $request->input('kategori_id');
-        $tanggal = $request->input('tanggal');
+        $kategori_id = $request->input('kategori_id', []);
         $month = $request->input('month');
         $year = $request->input('year');
+        $search = $request->input('search');
 
         $pendapatan = Pendapatan::with(['user', 'kategori']);
 
@@ -78,33 +75,34 @@ class PendapatanController extends Controller
             $pendapatan->where('user_id', $user_id);
         }
 
-        if ($jumlah) {
-            $pendapatan->where('jumal$jumlah', 'like', '%' . $jumlah . '%');
-        }
-
-        if ($pengirim) {
-            $pendapatan->where('pengirim', 'like', '%' . $pengirim . '%');
-        }
-
-        if ($deskripsi) {
-            $pendapatan->where('deskripsi', 'like', '%' . $deskripsi . '%');
-        }
-
         if ($kategori_id) {
-            $pendapatan->where('kategori_id', $kategori_id);
-        }
-
-        if ($tanggal) {
-            $pendapatan->where('tanggal', $tanggal);
+            $pendapatan->where(function ($query) use ($kategori_id) {
+                foreach ($kategori_id as $value) {
+                    $query->orWhere('kategori_pendapatan_id', $value);
+                }
+                return $query;
+            });
         }
 
         if ($month && $year) {
             $pendapatan->whereMonth('tanggal', $month)->whereYear('tanggal', $year);
         }
 
+        if ($search) {
+            $pendapatan->join('kategori_pendapatan', 'kategori_pendapatan.id', '=', 'pendapatan.kategori_pendapatan_id')
+                ->where(function ($query) use ($search) {
+                    return $query
+                        ->orWhere('tanggal', 'like', '%' . $search . '%')
+                        ->orWhere('kategori_pendapatan.nama', 'like', '%' . $search . '%')
+                        ->orWhere('jumlah', 'like', '%' . $search . '%')
+                        ->orWhere('pengirim', 'like', '%' . $search . '%')
+                        ->orWhere('deskripsi', 'like', '%' . $search . '%');
+                });
+        }
+
         return ResponseFormatter::success(
-            $pendapatan->paginate($limit),
-            'Data produk berhasil diambil'
+            $pendapatan->orderBy('tanggal', 'DESC')->paginate($limit),
+            'Get Pendapatan Successfully'
         );
     }
 

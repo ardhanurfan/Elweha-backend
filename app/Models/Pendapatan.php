@@ -27,11 +27,11 @@ class Pendapatan extends Model
 
     public function kategori()
     {
-        return $this->hasOne(KategoriPendapatan::class, 'kategori_pendapatan_id', 'id');
+        return $this->belongsTo(KategoriPendapatan::class, 'kategori_pendapatan_id', 'id');
     }
 
     public function user()
     {
-        return $this->hasOne(User::class, 'user_id', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

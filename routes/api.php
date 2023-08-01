@@ -1,7 +1,8 @@
 <?php
 
+use App\Http\Controllers\API\KategoriPendapatanController;
+use App\Http\Controllers\API\PendapatanController;
 use App\Http\Controllers\API\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,4 +22,12 @@ Route::post('register', [UserController::class, 'add']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('add-account', [UserController::class, 'add']);
     Route::get('user', [UserController::class, 'get']);
+
+    // Kategori Pendapatan
+    Route::post('kategori-pendapatan', [KategoriPendapatanController::class, 'create']);
+    Route::get('kategori-pendapatan', [KategoriPendapatanController::class, 'read']);
+
+    // Pendapatan
+    Route::post('pendapatan', [PendapatanController::class, 'create']);
+    Route::get('pendapatan', [PendapatanController::class, 'read']);
 });
