@@ -29,5 +29,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Pendapatan
     Route::post('pendapatan', [PendapatanController::class, 'create']);
+    Route::post('update-pendapatan', [PendapatanController::class, 'update']);
     Route::get('pendapatan', [PendapatanController::class, 'read']);
 });

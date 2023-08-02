@@ -17,7 +17,7 @@ class KategoriPendapatanController extends Controller
     {
         try {
             $request->validate([
-                'nama' => 'required',
+                'nama' => 'required|unique:kategori_pendapatan,nama',
             ]);
 
             $kategori_pendapatan = KategoriPendapatan::create([

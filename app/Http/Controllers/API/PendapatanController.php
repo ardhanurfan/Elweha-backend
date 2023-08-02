@@ -17,7 +17,6 @@ class PendapatanController extends Controller
     {
         try {
             $request->validate([
-                'user_id' => 'required',
                 'kategori_pendapatan_id' => 'required',
                 'tanggal' => 'required|date',
                 'jumlah' => 'required|integer',
@@ -100,8 +99,13 @@ class PendapatanController extends Controller
                 });
         }
 
+        $total = Pendapatan::sum('jumlah');
+
         return ResponseFormatter::success(
-            $pendapatan->orderBy('tanggal', 'DESC')->paginate($limit),
+            [
+                'total_pendapatan' => $total,
+                'table' => $pendapatan->orderBy('tanggal', 'DESC')->paginate($limit)
+            ],
             'Get Pendapatan Successfully'
         );
     }
@@ -109,6 +113,58 @@ class PendapatanController extends Controller
     // UPDATE
     public function update(Request $request)
     {
+        try {
+            $request->validate([
+                'id' => 'required',
+                'kategori_pendapatan_id' => 'required',
+                'tanggal' => 'required|date',
+                'jumlah' => 'required|integer',
+                'pengirim' => 'required',
+                'deskripsi' => 'required',
+            ]);
+
+            $pendapatan = Pendapatan::find($request->id);
+
+            if (!$pendapatan) {
+                return ResponseFormatter::error(
+                    null,
+                    'Data not found',
+                    404
+                );
+            }
+
+            $pendapatan->update([
+                'user_id' => Auth::id(),
+                'kategori_pendapatan_id' => $request->kategori_pendapatan_id,
+                'tanggal' => $request->tanggal,
+                'jumlah' => $request->jumlah,
+                'pengirim' => $request->pengirim,
+                'deskripsi' => $request->deskripsi,
+            ]);
+
+            return ResponseFormatter::success(
+                $pendapatan,
+                'Edit Pendapatan Successfully'
+            );
+        } catch (ValidationException $error) {
+            return ResponseFormatter::error(
+                [
+                    'message' => 'Something when wrong',
+                    'error' => array_values($error->errors())[0][0],
+                ],
+                'Edit Pendapatan Failed',
+                400,
+            );
+        } catch (Exception $error) {
+            return ResponseFormatter::error(
+                [
+                    'message' => 'Something when wrong',
+                    'error' => $error,
+                ],
+                'Edit Pendapatan Failed',
+                500,
+            );
+        }
     }
 
     // DELETE
