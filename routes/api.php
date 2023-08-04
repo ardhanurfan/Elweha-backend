@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\API\JenisPengeluaranController;
 use App\Http\Controllers\API\KategoriPendapatanController;
+use App\Http\Controllers\API\KategoriPengeluaranController;
 use App\Http\Controllers\API\PendapatanController;
+use App\Http\Controllers\API\PengeluaranController;
 use App\Http\Controllers\API\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +32,21 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Pendapatan
     Route::post('pendapatan', [PendapatanController::class, 'create']);
-    Route::post('update-pendapatan', [PendapatanController::class, 'update']);
     Route::get('pendapatan', [PendapatanController::class, 'read']);
+    Route::post('update-pendapatan', [PendapatanController::class, 'update']);
+    Route::post('delete-pendapatan', [PendapatanController::class, 'delete']);
+
+    // Kategori Pengeluaran
+    Route::post('kategori-pengeluaran', [KategoriPengeluaranController::class, 'create']);
+    Route::get('kategori-pengeluaran', [KategoriPengeluaranController::class, 'read']);
+
+    // Jenis Pengeluaran
+    Route::post('jenis-pengeluaran', [JenisPengeluaranController::class, 'create']);
+    Route::get('jenis-pengeluaran', [JenisPengeluaranController::class, 'read']);
+
+    // Pengeluaran
+    Route::post('pengeluaran', [PengeluaranController::class, 'create']);
+    Route::get('pengeluaran', [PengeluaranController::class, 'read']);
+    Route::post('update-pengeluaran', [PengeluaranController::class, 'update']);
+    Route::post('delete-pengeluaran', [PengeluaranController::class, 'delete']);
 });

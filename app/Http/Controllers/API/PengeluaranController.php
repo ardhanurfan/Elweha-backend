@@ -4,38 +4,38 @@ namespace App\Http\Controllers\API;
 
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
-use App\Models\Pendapatan;
+use App\Models\Pengeluaran;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
-class PendapatanController extends Controller
+class PengeluaranController extends Controller
 {
     // CREATE
     public function create(Request $request)
     {
         try {
             $request->validate([
-                'kategori_pendapatan_id' => 'required',
+                'kategori_pengeluaran_id' => 'required',
+                'jenis_pengeluaran_id' => 'required',
                 'tanggal' => 'required|date',
                 'jumlah' => 'required|integer',
-                'pengirim' => 'required',
                 'deskripsi' => 'required',
             ]);
 
-            $pendapatan = Pendapatan::create([
+            $pengeluaran = Pengeluaran::create([
                 'user_id' => Auth::id(),
-                'kategori_pendapatan_id' => $request->kategori_pendapatan_id,
+                'kategori_pengeluaran_id' => $request->kategori_pengeluaran_id,
+                'jenis_pengeluaran_id' => $request->jenis_pengeluaran_id,
                 'tanggal' => $request->tanggal,
                 'jumlah' => $request->jumlah,
-                'pengirim' => $request->pengirim,
                 'deskripsi' => $request->deskripsi,
             ]);
 
             return ResponseFormatter::success(
-                $pendapatan->load('kategori'),
-                'Create Pendapatan Successfully'
+                $pengeluaran->load(['kategori', 'jenis']),
+                'Create Pengeluaran Successfully'
             );
         } catch (ValidationException $error) {
             return ResponseFormatter::error(
@@ -43,7 +43,7 @@ class PendapatanController extends Controller
                     'message' => 'Something when wrong',
                     'error' => array_values($error->errors())[0][0],
                 ],
-                'Create Pendapatan Failed',
+                'Create Pengeluaran Failed',
                 400,
             );
         } catch (Exception $error) {
@@ -52,7 +52,7 @@ class PendapatanController extends Controller
                     'message' => 'Something when wrong',
                     'error' => $error,
                 ],
-                'Create Pendapatan Failed',
+                'Create Pengeluaran Failed',
                 500,
             );
         }
@@ -68,46 +68,47 @@ class PendapatanController extends Controller
         $year = $request->input('year');
         $search = $request->input('search');
 
-        $pendapatan = Pendapatan::with(['user', 'kategori']);
+        $pengeluaran = Pengeluaran::with(['user', 'kategori', 'jenis']);
 
         if ($user_id) {
-            $pendapatan->where('user_id', $user_id);
+            $pengeluaran->where('user_id', $user_id);
         }
 
         if ($kategori_id) {
-            $pendapatan->where(function ($query) use ($kategori_id) {
+            $pengeluaran->where(function ($query) use ($kategori_id) {
                 foreach ($kategori_id as $value) {
-                    $query->orWhere('kategori_pendapatan_id', $value);
+                    $query->orWhere('kategori_pengeluaran_id', $value);
                 }
                 return $query;
             });
         }
 
         if ($month && $year) {
-            $pendapatan->whereMonth('tanggal', $month)->whereYear('tanggal', $year);
+            $pengeluaran->whereMonth('tanggal', $month)->whereYear('tanggal', $year);
         }
 
         if ($search) {
-            $pendapatan->select("pendapatan.*")
-                ->join('kategori_pendapatan', 'pendapatan.kategori_pendapatan_id', '=', 'kategori_pendapatan.id')
+            $pengeluaran->select("pengeluaran.*")
+                ->join('kategori_pengeluaran', 'pengeluaran.kategori_pengeluaran_id', '=', 'kategori_pengeluaran.id')
+                ->join('jenis_pengeluaran', 'pengeluaran.jenis_pengeluaran_id', '=', 'jenis_pengeluaran.id')
                 ->where(function ($query) use ($search) {
                     return $query
                         ->orWhere('tanggal', 'like', '%' . $search . '%')
-                        ->orWhere('kategori_pendapatan.nama', 'like', '%' . $search . '%')
+                        ->orWhere('kategori_pengeluaran.nama', 'like', '%' . $search . '%')
+                        ->orWhere('jenis_pengeluaran.nama', 'like', '%' . $search . '%')
                         ->orWhere('jumlah', 'like', '%' . $search . '%')
-                        ->orWhere('pengirim', 'like', '%' . $search . '%')
                         ->orWhere('deskripsi', 'like', '%' . $search . '%');
                 });
         }
 
-        $total = Pendapatan::sum('jumlah');
+        $total = Pengeluaran::sum('jumlah');
 
         return ResponseFormatter::success(
             [
-                'total_pendapatan' => $total,
-                'table' => $pendapatan->orderBy('tanggal', 'DESC')->paginate($limit)
+                'total_pengeluaran' => $total,
+                'table' => $pengeluaran->orderBy('tanggal', 'DESC')->paginate($limit)
             ],
-            'Get Pendapatan Successfully'
+            'Get Pengeluaran Successfully'
         );
     }
 
@@ -117,16 +118,16 @@ class PendapatanController extends Controller
         try {
             $request->validate([
                 'id' => 'required',
-                'kategori_pendapatan_id' => 'required',
+                'kategori_pengeluaran_id' => 'required',
+                'jenis_pengeluaran_id' => 'required',
                 'tanggal' => 'required|date',
                 'jumlah' => 'required|integer',
-                'pengirim' => 'required',
                 'deskripsi' => 'required',
             ]);
 
-            $pendapatan = Pendapatan::find($request->id);
+            $pengeluaran = Pengeluaran::find($request->id);
 
-            if (!$pendapatan) {
+            if (!$pengeluaran) {
                 return ResponseFormatter::error(
                     null,
                     'Data not found',
@@ -134,18 +135,18 @@ class PendapatanController extends Controller
                 );
             }
 
-            $pendapatan->update([
+            $pengeluaran->update([
                 'user_id' => Auth::id(),
-                'kategori_pendapatan_id' => $request->kategori_pendapatan_id,
+                'kategori_pengeluaran_id' => $request->kategori_pengeluaran_id,
+                'jenis_pengeluaran_id' => $request->jenis_pengeluaran_id,
                 'tanggal' => $request->tanggal,
                 'jumlah' => $request->jumlah,
-                'pengirim' => $request->pengirim,
                 'deskripsi' => $request->deskripsi,
             ]);
 
             return ResponseFormatter::success(
-                $pendapatan,
-                'Edit Pendapatan Successfully'
+                $pengeluaran,
+                'Edit Pengeluaran Successfully'
             );
         } catch (ValidationException $error) {
             return ResponseFormatter::error(
@@ -153,7 +154,7 @@ class PendapatanController extends Controller
                     'message' => 'Something when wrong',
                     'error' => array_values($error->errors())[0][0],
                 ],
-                'Edit Pendapatan Failed',
+                'Edit Pengeluaran Failed',
                 400,
             );
         } catch (Exception $error) {
@@ -162,7 +163,7 @@ class PendapatanController extends Controller
                     'message' => 'Something when wrong',
                     'error' => $error,
                 ],
-                'Edit Pendapatan Failed',
+                'Edit Pengeluaran Failed',
                 500,
             );
         }
@@ -177,9 +178,9 @@ class PendapatanController extends Controller
             ]);
 
             foreach ($request->selectedId as $id) {
-                $pendapatan = Pendapatan::find($id);
+                $pengeluaran = Pengeluaran::find($id);
 
-                if (!$pendapatan) {
+                if (!$pengeluaran) {
                     return ResponseFormatter::error(
                         null,
                         'Some Data Not Found',
@@ -187,12 +188,12 @@ class PendapatanController extends Controller
                     );
                 }
 
-                $pendapatan->forceDelete();
+                $pengeluaran->forceDelete();
             }
 
             return ResponseFormatter::success(
                 null,
-                'Delete Pendapatan Successfully'
+                'Delete Pengeluaran Successfully'
             );
         } catch (ValidationException $error) {
             return ResponseFormatter::error(
@@ -200,7 +201,7 @@ class PendapatanController extends Controller
                     'message' => 'Something when wrong',
                     'error' => array_values($error->errors())[0][0],
                 ],
-                'Delete Pendapatan Failed',
+                'Delete Pengeluaran Failed',
                 400,
             );
         } catch (Exception $error) {
@@ -209,7 +210,7 @@ class PendapatanController extends Controller
                     'message' => 'Something when wrong',
                     'error' => $error,
                 ],
-                'Delete Pendapatan Failed',
+                'Delete Pengeluaran Failed',
                 500,
             );
         }
