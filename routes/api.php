@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\JenisPengeluaranController;
 use App\Http\Controllers\API\KategoriPendapatanController;
 use App\Http\Controllers\API\KategoriPengeluaranController;
+use App\Http\Controllers\API\PajakRekanController;
 use App\Http\Controllers\API\PendapatanController;
 use App\Http\Controllers\API\PengeluaranController;
 use App\Http\Controllers\API\UserController;
@@ -49,4 +50,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('pengeluaran', [PengeluaranController::class, 'read']);
     Route::post('update-pengeluaran', [PengeluaranController::class, 'update']);
     Route::post('delete-pengeluaran', [PengeluaranController::class, 'delete']);
+
+    // Pajak Rekan
+    Route::post('pajak-rekan', [PajakRekanController::class, 'create']);
+    Route::get('pajak-rekan', [PajakRekanController::class, 'read']);
+    Route::post('update-pajak-rekan', [PajakRekanController::class, 'update']);
+    Route::post('delete-pajak-rekan', [PajakRekanController::class, 'delete']);
 });
