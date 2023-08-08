@@ -100,7 +100,7 @@ class PendapatanController extends Controller
                 });
         }
 
-        $total = Pendapatan::sum('jumlah');
+        $total = $pendapatan->sum('jumlah');
 
         return ResponseFormatter::success(
             [

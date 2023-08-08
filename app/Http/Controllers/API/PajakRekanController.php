@@ -90,7 +90,7 @@ class PajakRekanController extends Controller
             });
         }
 
-        $total = PajakRekan::sum('transfer');
+        $total = $pajak_rekan->sum('transfer');
 
         return ResponseFormatter::success(
             [

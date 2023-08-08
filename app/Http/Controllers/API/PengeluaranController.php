@@ -101,7 +101,7 @@ class PengeluaranController extends Controller
                 });
         }
 
-        $total = Pengeluaran::sum('jumlah');
+        $total = $pengeluaran->sum('jumlah');
 
         return ResponseFormatter::success(
             [
