@@ -4,6 +4,7 @@ use App\Http\Controllers\API\JenisPengeluaranController;
 use App\Http\Controllers\API\KategoriPendapatanController;
 use App\Http\Controllers\API\KategoriPengeluaranController;
 use App\Http\Controllers\API\KoreksiController;
+use App\Http\Controllers\API\PajakRekanAktaController;
 use App\Http\Controllers\API\PajakRekanController;
 use App\Http\Controllers\API\PendapatanController;
 use App\Http\Controllers\API\PengeluaranController;
@@ -57,11 +58,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('pajak-rekan', [PajakRekanController::class, 'read']);
     Route::post('update-pajak-rekan', [PajakRekanController::class, 'update']);
     Route::post('delete-pajak-rekan', [PajakRekanController::class, 'delete']);
-    
+
+    // Pajak Rekan Akta
+    Route::post('pajak-rekan-akta', [PajakRekanAktaController::class, 'create']);
+    Route::get('pajak-rekan-akta', [PajakRekanAktaController::class, 'read']);
+    Route::post('update-pajak-rekan-akta', [PajakRekanAktaController::class, 'update']);
+    Route::post('delete-pajak-rekan-akta', [PajakRekanAktaController::class, 'delete']);
+
     // Koreksi
     Route::post('koreksi', [KoreksiController::class, 'create']);
     Route::get('koreksi', [KoreksiController::class, 'read']);
     Route::post('update-koreksi', [KoreksiController::class, 'update']);
     Route::post('delete-koreksi', [KoreksiController::class, 'delete']);
-    
 });

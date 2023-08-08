@@ -128,9 +128,12 @@ class PendapatanController extends Controller
 
             if (!$pendapatan) {
                 return ResponseFormatter::error(
-                    null,
-                    'Data not found',
-                    404
+                    [
+                        'message' => 'Something when wrong',
+                        'error' => 'Data not found',
+                    ],
+                    'Edit Pendapatan Failed',
+                    404,
                 );
             }
 
@@ -181,9 +184,12 @@ class PendapatanController extends Controller
 
                 if (!$pendapatan) {
                     return ResponseFormatter::error(
-                        null,
-                        'Some Data Not Found',
-                        404
+                        [
+                            'message' => 'Something when wrong',
+                            'error' => 'Some Data Not Found',
+                        ],
+                        'Delete Pendapatan Failed',
+                        404,
                     );
                 }
 

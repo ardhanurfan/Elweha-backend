@@ -61,7 +61,7 @@ class PajakRekanController extends Controller
         $endDate = $request->input('endDate');
         $search = $request->input('search');
 
-        $pajak_rekan = PajakRekan::select("pajak_rekan.*")
+        $pajak_rekan = PajakRekan::select("pajak_rekan.*")->distinct()
             ->leftJoin('pajak_rekan_akta', 'pajak_rekan_akta.pajak_rekan_id', '=', 'pajak_rekan.id')
             ->where(function ($query) use ($startDate, $endDate) {
                 if ($startDate && $endDate) {
@@ -105,8 +105,6 @@ class PajakRekanController extends Controller
     public function update(Request $request)
     {
         try {
-            $nama = $request->input('nama_rekan');
-
             $request->validate([
                 'id' => 'required',
                 'nama_rekan' => 'required|unique:pajak_rekan,nama,' . $request->id,
@@ -117,9 +115,12 @@ class PajakRekanController extends Controller
 
             if (!$pajak_rekan) {
                 return ResponseFormatter::error(
-                    null,
-                    'Data not found',
-                    404
+                    [
+                        'message' => 'Something when wrong',
+                        'error' => 'Data not found',
+                    ],
+                    'Edit Pajak Rekan Failed',
+                    404,
                 );
             }
 
@@ -167,9 +168,12 @@ class PajakRekanController extends Controller
 
                 if (!$pajak_rekan) {
                     return ResponseFormatter::error(
-                        null,
-                        'Some Data Not Found',
-                        404
+                        [
+                            'message' => 'Something when wrong',
+                            'error' => 'Some Data not found',
+                        ],
+                        'Delete Pajak Rekan Failed',
+                        404,
                     );
                 }
 
