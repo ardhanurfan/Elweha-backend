@@ -29,6 +29,7 @@ class RekanController extends Controller
             ]);
 
             PajakRekan::create([
+                'user_id' => Auth::id(),
                 'rekan_id' => $rekan->id,
                 'jumlah_akta' => 0,
                 'jasa_bruto' => 0,
