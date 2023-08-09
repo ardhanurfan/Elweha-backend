@@ -4,7 +4,9 @@ namespace App\Http\Controllers\API;
 
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Models\PajakRekan;
 use App\Models\PajakRekanAkta;
+use App\Models\Rekan;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -55,6 +57,27 @@ class PajakRekanAktaController extends Controller
                 'no_akhir' => $request->no_akhir,
                 'jumlah_akta' => $request->no_akhir - $request->no_awal + 1,
             ]);
+
+            $bulan = date('n', strtotime($request->tanggal));
+            $tahun = date('Y', strtotime($request->tanggal));
+            $pajak_rekan = PajakRekan::where('bulan', $bulan)->where('tahun', $tahun)->first();
+            if ($pajak_rekan) {
+                $jumlah_akta = $pajak_rekan->jumlah_akta + $pajak_rekan_akta->jumlah_akta;
+                $pajak_rekan->update([
+                    'user_id' => Auth::id(),
+                    'jumlah_akta' => $jumlah_akta,
+                ]);
+            } else {
+                $biaya_jasa = Rekan::where('id', $request->rekan_id)->first()->biaya_jasa;
+                PajakRekan::create([
+                    'user_id' => Auth::id(),
+                    'rekan_id' => $request->rekan_id,
+                    'biaya_jasa' => $biaya_jasa,
+                    'jumlah_akta' => $pajak_rekan_akta->jumlah_akta,
+                    'bulan' => $bulan,
+                    'tahun' => $tahun,
+                ]);
+            }
 
             return ResponseFormatter::success(
                 $pajak_rekan_akta,
@@ -151,6 +174,22 @@ class PajakRekanAktaController extends Controller
                 $i++;
             }
 
+            // Kurangi yang lama atau hapus jika kosong
+            $bulan_old = date('n', strtotime($pajak_rekan_akta->tanggal));
+            $tahun_old = date('Y', strtotime($pajak_rekan_akta->tanggal));
+            $pajak_rekan_old = PajakRekan::where('bulan', $bulan_old)->where('tahun', $tahun_old)->first();
+            if ($pajak_rekan_old) {
+                $jumlah_akta = $pajak_rekan_old->jumlah_akta - $pajak_rekan_akta->jumlah_akta;
+                if ($jumlah_akta == 0) {
+                    $pajak_rekan_old->forceDelete();
+                } else {
+                    $pajak_rekan_old->update([
+                        'user_id' => Auth::id(),
+                        'jumlah_akta' => $jumlah_akta,
+                    ]);
+                }
+            }
+
             $pajak_rekan_akta->update([
                 'user_id' => Auth::id(),
                 'rekan_id' => $request->rekan_id,
@@ -159,6 +198,29 @@ class PajakRekanAktaController extends Controller
                 'no_akhir' => $request->no_akhir,
                 'jumlah_akta' => $request->no_akhir - $request->no_awal + 1,
             ]);
+
+
+            // Update yang baru
+            $bulan = date('n', strtotime($request->tanggal));
+            $tahun = date('Y', strtotime($request->tanggal));
+            $pajak_rekan = PajakRekan::where('bulan', $bulan)->where('tahun', $tahun)->first();
+            if ($pajak_rekan) {
+                $jumlah_akta = $pajak_rekan->jumlah_akta + $pajak_rekan_akta->jumlah_akta;
+                $pajak_rekan->update([
+                    'user_id' => Auth::id(),
+                    'jumlah_akta' => $jumlah_akta,
+                ]);
+            } else {
+                $biaya_jasa = Rekan::where('id', $request->rekan_id)->first()->biaya_jasa;
+                PajakRekan::create([
+                    'user_id' => Auth::id(),
+                    'rekan_id' => $request->rekan_id,
+                    'biaya_jasa' => $biaya_jasa,
+                    'jumlah_akta' => $pajak_rekan_akta->jumlah_akta,
+                    'bulan' => $bulan,
+                    'tahun' => $tahun,
+                ]);
+            }
 
             return ResponseFormatter::success(
                 $pajak_rekan_akta,
@@ -205,6 +267,21 @@ class PajakRekanAktaController extends Controller
                         'Delete Akta Failed',
                         404,
                     );
+                }
+
+                $bulan = date('n', strtotime($pajak_rekan_akta->tanggal));
+                $tahun = date('Y', strtotime($pajak_rekan_akta->tanggal));
+                $pajak_rekan = PajakRekan::where('bulan', $bulan)->where('tahun', $tahun)->first();
+                if ($pajak_rekan) {
+                    $jumlah_akta = $pajak_rekan->jumlah_akta - $pajak_rekan_akta->jumlah_akta;
+                    if ($jumlah_akta == 0) {
+                        $pajak_rekan->forceDelete();
+                    } else {
+                        $pajak_rekan->update([
+                            'user_id' => Auth::id(),
+                            'jumlah_akta' => $jumlah_akta,
+                        ]);
+                    }
                 }
 
                 $pajak_rekan_akta->forceDelete();

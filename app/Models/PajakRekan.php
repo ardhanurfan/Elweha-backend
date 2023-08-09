@@ -19,13 +19,10 @@ class PajakRekan extends Model
     protected $fillable = [
         'user_id',
         'rekan_id',
+        'biaya_jasa',
         'jumlah_akta',
-        'jasa_bruto',
-        'dpp',
-        'dpp_akumulasi',
-        'pph_dipotong',
-        'pajak_akumulasi',
-        'transfer',
+        'bulan',
+        'tahun',
     ];
 
     public function pajakRekanAkta()

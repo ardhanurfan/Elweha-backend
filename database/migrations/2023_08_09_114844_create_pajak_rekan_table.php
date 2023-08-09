@@ -15,13 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null')->onUpdate('cascade');
             $table->foreignId('rekan_id')->nullable()->constrained('rekan')->onDelete('cascade')->onUpdate('cascade');
-            $table->double('jumlah_akta')->default(0);
-            $table->double('jasa_bruto')->default(0);
-            $table->double('dpp')->default(0);
-            $table->double('dpp_akumulasi')->default(0);
-            $table->double('pph_dipotong')->default(0);
-            $table->double('pajak_akumulasi')->default(0);
-            $table->double('transfer')->default(0);
+            $table->integer('biaya_jasa');
+            $table->integer('jumlah_akta')->default(0);
+            $table->integer('bulan')->default(0);
+            $table->integer('tahun')->default(0);
             $table->timestamps();
         });
     }

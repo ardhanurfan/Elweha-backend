@@ -19,7 +19,7 @@ class RekanController extends Controller
         try {
             $request->validate([
                 'nama_rekan' => 'required|unique:rekan,nama',
-                'biaya_jasa' => 'required|numeric',
+                'biaya_jasa' => 'required|integer',
             ]);
 
             $rekan = Rekan::create([
@@ -31,13 +31,7 @@ class RekanController extends Controller
             PajakRekan::create([
                 'user_id' => Auth::id(),
                 'rekan_id' => $rekan->id,
-                'jumlah_akta' => 0,
-                'jasa_bruto' => 0,
-                'dpp' => 0,
-                'dpp_akumulasi' => 0,
-                'pph_dipotong' => 0,
-                'pajak_akumulasi' => 0,
-                'transfer' => 0,
+                'biaya_jasa' => $rekan->biaya_jasa,
             ]);
 
             return ResponseFormatter::success(
@@ -77,7 +71,7 @@ class RekanController extends Controller
             $request->validate([
                 'id' => 'required',
                 'nama_rekan' => 'required|unique:rekan,nama,' . $request->id,
-                'biaya_jasa' => 'required|numeric',
+                'biaya_jasa' => 'required|integer',
             ]);
 
             $rekan = Rekan::find($request->id);
