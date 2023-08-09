@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\GajiController;
 use App\Http\Controllers\API\JenisPengeluaranController;
 use App\Http\Controllers\API\KategoriPendapatanController;
 use App\Http\Controllers\API\KategoriPengeluaranController;
@@ -63,5 +64,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('koreksi', [KoreksiController::class, 'read']);
     Route::post('update-koreksi', [KoreksiController::class, 'update']);
     Route::post('delete-koreksi', [KoreksiController::class, 'delete']);
+    
+    // Gaji
+    Route::post('gaji', [GajiController::class, 'create']);
+    Route::get('gaji', [GajiController::class, 'read']);
+    Route::post('update-gaji', [GajiController::class, 'update']);
+    Route::post('delete-gaji', [GajiController::class, 'delete']);
     
 });
