@@ -79,9 +79,12 @@ class KoreksiController extends Controller
 
             if (!$koreksi) {
                 return ResponseFormatter::error(
-                    null,
-                    'Data not found',
-                    404
+                    [
+                        'message' => 'Something when wrong',
+                        'error' => 'Data Not Found',
+                    ],
+                    'Edit Koreksi Failed',
+                    404,
                 );
             }
 
@@ -126,12 +129,15 @@ class KoreksiController extends Controller
             $koreksi = Koreksi::find($request->id);
             if (!$koreksi) {
                 return ResponseFormatter::error(
-                    null,
-                    'Data Not Found',
-                    404
+                    [
+                        'message' => 'Something when wrong',
+                        'error' => 'Data Not Found',
+                    ],
+                    'Delete Koreksi Failed',
+                    404,
                 );
             }
-            
+
             $koreksi->forceDelete();
 
             return ResponseFormatter::success(

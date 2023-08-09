@@ -101,7 +101,7 @@ class PengeluaranController extends Controller
                 });
         }
 
-        $total = Pengeluaran::sum('jumlah');
+        $total = $pengeluaran->sum('jumlah');
 
         return ResponseFormatter::success(
             [
@@ -129,9 +129,12 @@ class PengeluaranController extends Controller
 
             if (!$pengeluaran) {
                 return ResponseFormatter::error(
-                    null,
-                    'Data not found',
-                    404
+                    [
+                        'message' => 'Something when wrong',
+                        'error' => 'Data not found',
+                    ],
+                    'Edit Pengeluaran Failed',
+                    404,
                 );
             }
 
@@ -182,9 +185,12 @@ class PengeluaranController extends Controller
 
                 if (!$pengeluaran) {
                     return ResponseFormatter::error(
-                        null,
-                        'Some Data Not Found',
-                        404
+                        [
+                            'message' => 'Something when wrong',
+                            'error' => 'Some Data Not Found',
+                        ],
+                        'Delete Pengeluaran Failed',
+                        404,
                     );
                 }
 
