@@ -17,6 +17,7 @@ class Rekan extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'user_id',
         'nama',
         'biaya_jasa',
     ];
