@@ -18,8 +18,7 @@ class PajakRekan extends Model
      */
     protected $fillable = [
         'user_id',
-        'nama',
-        'biaya_jasa',
+        'rekan_id',
         'jumlah_akta',
         'jasa_bruto',
         'dpp',
@@ -32,5 +31,10 @@ class PajakRekan extends Model
     public function pajakRekanAkta()
     {
         return $this->hasMany(PajakRekanAkta::class, 'pajak_rekan_id', 'id');
+    }
+
+    public function rekan()
+    {
+        return $this->belongsTo(Rekan::class, 'rekan_id', 'id');
     }
 }

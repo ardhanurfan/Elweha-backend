@@ -14,8 +14,14 @@ return new class extends Migration
         Schema::create('pajak_rekan', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null')->onUpdate('cascade');
-            $table->string('nama');
-            $table->integer('biaya_jasa');
+            $table->foreignId('rekan_id')->nullable()->constrained('rekan')->onDelete('cascade')->onUpdate('cascade');
+            $table->double('jumlah_akta')->default(0);
+            $table->double('jasa_bruto')->default(0);
+            $table->double('dpp')->default(0);
+            $table->double('dpp_akumulasi')->default(0);
+            $table->double('pph_dipotong')->default(0);
+            $table->double('pajak_akumulasi')->default(0);
+            $table->double('transfer')->default(0);
             $table->timestamps();
         });
     }

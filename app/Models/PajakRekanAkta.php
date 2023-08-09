@@ -18,7 +18,7 @@ class PajakRekanAkta extends Model
      */
     protected $fillable = [
         'user_id',
-        'pajak_rekan_id',
+        'rekan_id',
         'tanggal',
         'no_awal',
         'no_akhir',
@@ -28,5 +28,10 @@ class PajakRekanAkta extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function rekan()
+    {
+        return $this->belongsTo(Rekan::class, 'rekan', 'id');
     }
 }

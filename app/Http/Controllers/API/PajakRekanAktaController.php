@@ -17,7 +17,7 @@ class PajakRekanAktaController extends Controller
     {
         try {
             $request->validate([
-                'pajak_rekan_id' => 'required|integer',
+                'rekan_id' => 'required|integer',
                 'tanggal' => 'required|date',
                 'no_awal' => 'required|integer|min:1',
                 'no_akhir' => 'required|integer|min:' . $request->no_awal,
@@ -49,7 +49,7 @@ class PajakRekanAktaController extends Controller
 
             $pajak_rekan_akta = PajakRekanAkta::create([
                 'user_id' => Auth::id(),
-                'pajak_rekan_id' => $request->pajak_rekan_id,
+                'rekan_id' => $request->rekan_id,
                 'tanggal' => $request->tanggal,
                 'no_awal' => $request->no_awal,
                 'no_akhir' => $request->no_akhir,
@@ -86,9 +86,9 @@ class PajakRekanAktaController extends Controller
     {
         $user_id = $request->input('user_id');
         $limit = $request->input('limit');
-        $pajak_rekan_id = $request->input('pajak_rekan_id');
+        $rekan_id = $request->input('rekan_id');
 
-        $pajak_rekan_akta = PajakRekanAkta::with(['user'])->where('pajak_rekan_id', $pajak_rekan_id);
+        $pajak_rekan_akta = PajakRekanAkta::with(['user'])->where('rekan_id', $rekan_id);
 
         if ($user_id) {
             $pajak_rekan_akta->where('user_id', $user_id);
@@ -108,7 +108,7 @@ class PajakRekanAktaController extends Controller
         try {
             $request->validate([
                 'id' => 'required',
-                'pajak_rekan_id' => 'required|integer',
+                'rekan_id' => 'required|integer',
                 'tanggal' => 'required|date',
                 'no_awal' => 'required|integer|min:1',
                 'no_akhir' => 'required|integer|min:' . $request->no_awal,
@@ -153,7 +153,7 @@ class PajakRekanAktaController extends Controller
 
             $pajak_rekan_akta->update([
                 'user_id' => Auth::id(),
-                'pajak_rekan_id' => $request->pajak_rekan_id,
+                'rekan_id' => $request->rekan_id,
                 'tanggal' => $request->tanggal,
                 'no_awal' => $request->no_awal,
                 'no_akhir' => $request->no_akhir,

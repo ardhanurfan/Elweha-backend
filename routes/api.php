@@ -9,7 +9,9 @@ use App\Http\Controllers\API\PajakRekanAktaController;
 use App\Http\Controllers\API\PajakRekanController;
 use App\Http\Controllers\API\PendapatanController;
 use App\Http\Controllers\API\PengeluaranController;
+use App\Http\Controllers\API\RekanController;
 use App\Http\Controllers\API\UserController;
+use App\Models\Rekan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -54,11 +56,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('update-pengeluaran', [PengeluaranController::class, 'update']);
     Route::post('delete-pengeluaran', [PengeluaranController::class, 'delete']);
 
+    // Rekan
+    Route::post('rekan', [RekanController::class, 'create']);
+    Route::post('update-rekan', [RekanController::class, 'update']);
+    Route::post('delete-rekan', [RekanController::class, 'delete']);
+
     // Pajak Rekan
-    Route::post('pajak-rekan', [PajakRekanController::class, 'create']);
     Route::get('pajak-rekan', [PajakRekanController::class, 'read']);
-    Route::post('update-pajak-rekan', [PajakRekanController::class, 'update']);
-    Route::post('delete-pajak-rekan', [PajakRekanController::class, 'delete']);
 
     // Pajak Rekan Akta
     Route::post('pajak-rekan-akta', [PajakRekanAktaController::class, 'create']);

@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pajak_rekan_akta', function (Blueprint $table) {
+        Schema::create('rekan', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null')->onUpdate('cascade');
-            $table->foreignId('rekan_id')->nullable()->constrained('rekan')->onDelete('cascade')->onUpdate('cascade');
-            $table->timestamp('tanggal');
-            $table->integer('no_awal');
-            $table->integer('no_akhir');
-            $table->integer('jumlah_akta');
+            $table->string('nama');
+            $table->double('biaya_jasa');
             $table->timestamps();
         });
     }
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pajak_rekan_akta');
+        Schema::dropIfExists('rekan');
     }
 };
