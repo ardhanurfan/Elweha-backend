@@ -62,7 +62,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('delete-rekan', [RekanController::class, 'delete']);
 
     // Pajak Rekan
-    Route::get('pajak-rekan', [PajakRekanController::class, 'read']);
+    Route::get('pajak-rekan-by-id', [PajakRekanController::class, 'readByRekanId']);
+    Route::get('pajak-rekan-by-tahun', [PajakRekanController::class, 'readByTahun']);
 
     // Pajak Rekan Akta
     Route::post('pajak-rekan-akta', [PajakRekanAktaController::class, 'create']);
@@ -75,11 +76,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('koreksi', [KoreksiController::class, 'read']);
     Route::post('update-koreksi', [KoreksiController::class, 'update']);
     Route::post('delete-koreksi', [KoreksiController::class, 'delete']);
-    
+
     // Gaji
     Route::post('gaji', [GajiController::class, 'create']);
     Route::get('gaji', [GajiController::class, 'read']);
     Route::post('update-gaji', [GajiController::class, 'update']);
     Route::post('delete-gaji', [GajiController::class, 'delete']);
-    
 });

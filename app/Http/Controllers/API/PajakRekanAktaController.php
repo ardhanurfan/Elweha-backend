@@ -49,6 +49,13 @@ class PajakRekanAktaController extends Controller
                 $i++;
             }
 
+            // hapus 00
+            $nol =
+                PajakRekan::where('rekan_id', $request->rekan_id)->where('bulan', 0)->where('tahun', 0)->first();
+            if ($nol) {
+                $nol->forceDelete();
+            }
+
             $pajak_rekan_akta = PajakRekanAkta::create([
                 'user_id' => Auth::id(),
                 'rekan_id' => $request->rekan_id,
@@ -60,7 +67,7 @@ class PajakRekanAktaController extends Controller
 
             $bulan = date('n', strtotime($request->tanggal));
             $tahun = date('Y', strtotime($request->tanggal));
-            $pajak_rekan = PajakRekan::where('bulan', $bulan)->where('tahun', $tahun)->first();
+            $pajak_rekan = PajakRekan::where('rekan_id', $request->rekan_id)->where('bulan', $bulan)->where('tahun', $tahun)->first();
             if ($pajak_rekan) {
                 $jumlah_akta = $pajak_rekan->jumlah_akta + $pajak_rekan_akta->jumlah_akta;
                 $pajak_rekan->update([
@@ -177,7 +184,7 @@ class PajakRekanAktaController extends Controller
             // Kurangi yang lama atau hapus jika kosong
             $bulan_old = date('n', strtotime($pajak_rekan_akta->tanggal));
             $tahun_old = date('Y', strtotime($pajak_rekan_akta->tanggal));
-            $pajak_rekan_old = PajakRekan::where('bulan', $bulan_old)->where('tahun', $tahun_old)->first();
+            $pajak_rekan_old = PajakRekan::where('rekan_id', $request->rekan_id)->where('bulan', $bulan_old)->where('tahun', $tahun_old)->first();
             if ($pajak_rekan_old) {
                 $jumlah_akta = $pajak_rekan_old->jumlah_akta - $pajak_rekan_akta->jumlah_akta;
                 if ($jumlah_akta == 0) {
@@ -203,7 +210,7 @@ class PajakRekanAktaController extends Controller
             // Update yang baru
             $bulan = date('n', strtotime($request->tanggal));
             $tahun = date('Y', strtotime($request->tanggal));
-            $pajak_rekan = PajakRekan::where('bulan', $bulan)->where('tahun', $tahun)->first();
+            $pajak_rekan = PajakRekan::where('rekan_id', $request->rekan_id)->where('bulan', $bulan)->where('tahun', $tahun)->first();
             if ($pajak_rekan) {
                 $jumlah_akta = $pajak_rekan->jumlah_akta + $pajak_rekan_akta->jumlah_akta;
                 $pajak_rekan->update([
@@ -253,6 +260,7 @@ class PajakRekanAktaController extends Controller
         try {
             $request->validate([
                 'selectedId' => 'required|array',
+                'rekan_id' => 'required',
             ]);
 
             foreach ($request->selectedId as $id) {
@@ -271,7 +279,7 @@ class PajakRekanAktaController extends Controller
 
                 $bulan = date('n', strtotime($pajak_rekan_akta->tanggal));
                 $tahun = date('Y', strtotime($pajak_rekan_akta->tanggal));
-                $pajak_rekan = PajakRekan::where('bulan', $bulan)->where('tahun', $tahun)->first();
+                $pajak_rekan = PajakRekan::where('rekan_id', $request->rekan_id)->where('bulan', $bulan)->where('tahun', $tahun)->first();
                 if ($pajak_rekan) {
                     $jumlah_akta = $pajak_rekan->jumlah_akta - $pajak_rekan_akta->jumlah_akta;
                     if ($jumlah_akta == 0) {
