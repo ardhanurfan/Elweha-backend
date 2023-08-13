@@ -18,13 +18,14 @@ class BarangController extends Controller
         try {
             $request->validate([
                 'jenis_barang_id' => 'required',
-                'nama_barang' => 'required|string',
+                'nama_barang' => 'required|string|unique:barang,nama_barang',
                 'jumlah' => 'required|integer|min:0',
                 'satuan' => 'required|string',
             ]);
 
             $barang = Barang::create([
                 'user_id' => Auth::id(),
+                'nama_barang' => $request->nama_barang,
                 'jenis_barang_id' => $request->jenis_barang_id,
                 'jumlah' => $request->jumlah,
                 'satuan' => $request->satuan,
@@ -93,7 +94,7 @@ class BarangController extends Controller
                     return $query
                         ->orWhere('jenis_barang.nama', 'like', '%' . $search . '%')
                         ->orWhere('nama_barang', 'like', '%' . $search . '%')
-                        ->orWhere('jumlah', 'like', '%' . $search . '%')
+                        ->orWhere('barang.jumlah', 'like', '%' . $search . '%')
                         ->orWhere('satuan', 'like', '%' . $search . '%');
                 });
         }
@@ -112,7 +113,7 @@ class BarangController extends Controller
             $request->validate([
                 'id' => 'required',
                 'jenis_barang_id' => 'required',
-                'nama_barang' => 'required|string',
+                'nama_barang' => 'required|string|unique:barang,nama_barang,' . $request->id,
                 'jumlah' => 'required|integer|min:0',
                 'satuan' => 'required|string',
             ]);
@@ -132,6 +133,7 @@ class BarangController extends Controller
 
             $barang->update([
                 'user_id' => Auth::id(),
+                'nama_barang' => $request->nama_barang,
                 'jenis_barang_id' => $request->jenis_barang_id,
                 'jumlah' => $request->jumlah,
                 'satuan' => $request->satuan,

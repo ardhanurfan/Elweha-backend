@@ -24,7 +24,17 @@ class PengambilBarangController extends Controller
                 'jumlah' => 'required|integer|min:0',
             ]);
 
-            $barang = Barang::find($request->barang_id)->first();
+            $barang = Barang::find($request->barang_id);
+            if (!$barang) {
+                return ResponseFormatter::error(
+                    [
+                        'message' => 'Something when wrong',
+                        'error' => 'Some Data Not Found',
+                    ],
+                    'Create Pengambilan Failed',
+                    404,
+                );
+            }
             if ($barang->jumlah < $request->jumlah) {
                 return ResponseFormatter::error(
                     [
@@ -42,6 +52,7 @@ class PengambilBarangController extends Controller
 
             $ambil = PengambilBarang::create([
                 'user_id' => Auth::id(),
+                'nama_pengambil' => $request->nama_pengambil,
                 'barang_id' => $request->barang_id,
                 'tanggal' => $request->tanggal,
                 'jumlah' => $request->jumlah,
@@ -104,18 +115,24 @@ class PengambilBarangController extends Controller
         }
 
         if ($search) {
-            $ambil->select("pengambil_barang.*")
-                ->join('barang', 'pengambil_barang.barang_id', '=', 'barang.id')
-                ->join('jenis_barang', 'barang.jenis_barang_id', '=', 'jenis_barang.id')
-                ->where(function ($query) use ($search) {
-                    return $query
-                        ->orWhere('tanggal', 'like', '%' . $search . '%')
-                        ->orWhere('nama_pengambil', 'like', '%' . $search . '%')
-                        ->orWhere('nama_barang', 'like', '%' . $search . '%')
-                        ->orWhere('jenis_barang.nama', 'like', '%' . $search . '%')
-                        ->orWhere('pengambil_barang.jumlah', 'like', '%' . $search . '%')
-                        ->orWhere('barang.satuan', 'like', '%' . $search . '%');
-                });
+            if ($jenis_id) {
+                $ambil->select("pengambil_barang.*")
+                    ->join('jenis_barang', 'barang.jenis_barang_id', '=', 'jenis_barang.id');
+            } else {
+                $ambil->select("pengambil_barang.*")
+                    ->join('barang', 'pengambil_barang.barang_id', '=', 'barang.id')
+                    ->join('jenis_barang', 'barang.jenis_barang_id', '=', 'jenis_barang.id');
+            }
+
+            $ambil->where(function ($query) use ($search) {
+                return $query
+                    ->orWhere('tanggal', 'like', '%' . $search . '%')
+                    ->orWhere('nama_pengambil', 'like', '%' . $search . '%')
+                    ->orWhere('nama_barang', 'like', '%' . $search . '%')
+                    ->orWhere('jenis_barang.nama', 'like', '%' . $search . '%')
+                    ->orWhere('pengambil_barang.jumlah', 'like', '%' . $search . '%')
+                    ->orWhere('barang.satuan', 'like', '%' . $search . '%');
+            });
         }
 
 
@@ -149,7 +166,17 @@ class PengambilBarangController extends Controller
                 );
             }
 
-            $barang = Barang::find($request->barang_id)->first();
+            $barang = Barang::find($request->barang_id);
+            if (!$barang) {
+                return ResponseFormatter::error(
+                    [
+                        'message' => 'Something when wrong',
+                        'error' => 'Some Data Not Found',
+                    ],
+                    'Edit Pengambilan Failed',
+                    404,
+                );
+            }
             if (($barang->jumlah + $ambil->jumlah) < $request->jumlah) {
                 return ResponseFormatter::error(
                     [
@@ -167,6 +194,7 @@ class PengambilBarangController extends Controller
 
             $ambil->update([
                 'user_id' => Auth::id(),
+                'nama_pengambil' => $request->nama_pengambil,
                 'barang_id' => $request->barang_id,
                 'tanggal' => $request->tanggal,
                 'jumlah' => $request->jumlah,
@@ -207,6 +235,22 @@ class PengambilBarangController extends Controller
 
             foreach ($request->selectedId as $id) {
                 $ambil = PengambilBarang::find($id);
+
+                $barang = Barang::find($ambil->barang_id);
+                if (!$barang) {
+                    return ResponseFormatter::error(
+                        [
+                            'message' => 'Something when wrong',
+                            'error' => 'Some Data Not Found',
+                        ],
+                        'Edit Pengambilan Failed',
+                        404,
+                    );
+                }
+
+                $barang->update([
+                    'jumlah' => $barang->jumlah + $ambil->jumlah
+                ]);
 
                 if (!$ambil) {
                     return ResponseFormatter::error(

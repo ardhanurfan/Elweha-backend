@@ -87,8 +87,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('delete-gaji', [GajiController::class, 'delete']);
 
     // Jenis Barang
-    Route::post('jenis-Barang', [JenisBarangController::class, 'create']);
-    Route::get('jenis-Barang', [JenisBarangController::class, 'read']);
+    Route::post('jenis-barang', [JenisBarangController::class, 'create']);
+    Route::get('jenis-barang', [JenisBarangController::class, 'read']);
 
     // Barang
     Route::post('barang', [BarangController::class, 'create']);
