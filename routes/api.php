@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\API\BarangController;
 use App\Http\Controllers\API\GajiController;
+use App\Http\Controllers\API\JenisBarangController;
 use App\Http\Controllers\API\JenisPengeluaranController;
 use App\Http\Controllers\API\KategoriPendapatanController;
 use App\Http\Controllers\API\KategoriPengeluaranController;
@@ -8,6 +10,7 @@ use App\Http\Controllers\API\KoreksiController;
 use App\Http\Controllers\API\PajakRekanAktaController;
 use App\Http\Controllers\API\PajakRekanController;
 use App\Http\Controllers\API\PendapatanController;
+use App\Http\Controllers\API\PengambilBarangController;
 use App\Http\Controllers\API\PengeluaranController;
 use App\Http\Controllers\API\RekanController;
 use App\Http\Controllers\API\UserController;
@@ -82,4 +85,20 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('gaji', [GajiController::class, 'read']);
     Route::post('update-gaji', [GajiController::class, 'update']);
     Route::post('delete-gaji', [GajiController::class, 'delete']);
+
+    // Jenis Barang
+    Route::post('jenis-Barang', [JenisBarangController::class, 'create']);
+    Route::get('jenis-Barang', [JenisBarangController::class, 'read']);
+
+    // Barang
+    Route::post('barang', [BarangController::class, 'create']);
+    Route::get('barang', [BarangController::class, 'read']);
+    Route::post('update-barang', [BarangController::class, 'update']);
+    Route::post('delete-barang', [BarangController::class, 'delete']);
+
+    // Pengambilan Barang
+    Route::post('pengambilan', [PengambilBarangController::class, 'create']);
+    Route::get('pengambilan', [PengambilBarangController::class, 'read']);
+    Route::post('update-pengambilan', [PengambilBarangController::class, 'update']);
+    Route::post('delete-pengambilan', [PengambilBarangController::class, 'delete']);
 });
