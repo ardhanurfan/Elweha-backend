@@ -137,7 +137,7 @@ class PengambilBarangController extends Controller
 
 
         return ResponseFormatter::success(
-            $ambil->orderBy('nama_barang', 'DESC')->paginate($limit),
+            $ambil->orderBy('tanggal', 'DESC')->paginate($limit),
             'Get Pengambilan Successfully'
         );
     }

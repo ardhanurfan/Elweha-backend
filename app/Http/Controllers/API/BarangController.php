@@ -101,7 +101,7 @@ class BarangController extends Controller
 
 
         return ResponseFormatter::success(
-            $barang->orderBy('nama_barang', 'DESC')->paginate($limit),
+            $barang->orderBy('nama_barang')->paginate($limit),
             'Get Barang Data Successfully'
         );
     }
