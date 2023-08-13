@@ -34,6 +34,10 @@ Route::post('register', [UserController::class, 'add']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('add-account', [UserController::class, 'add']);
     Route::get('user', [UserController::class, 'get']);
+    Route::get('daftar-user', [UserController::class, 'read']);
+    Route::post('edit-account', [UserController::class, 'edit']);
+    Route::post('delete-account', [UserController::class, 'delete']);
+    Route::post('logout', [UserController::class, 'logout']);
 
     // Kategori Pendapatan
     Route::post('kategori-pendapatan', [KategoriPendapatanController::class, 'create']);
