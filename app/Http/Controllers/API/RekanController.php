@@ -72,6 +72,7 @@ class RekanController extends Controller
                 'id' => 'required',
                 'nama_rekan' => 'required|unique:rekan,nama,' . $request->id,
                 'biaya_jasa' => 'required|integer',
+                'tahun' => 'required'
             ]);
 
             $rekan = Rekan::find($request->id);
@@ -90,8 +91,18 @@ class RekanController extends Controller
             $rekan->update([
                 'user_id' => Auth::id(),
                 'nama' => $request->nama_rekan,
+            ]);
+
+            $pajak_rekan = PajakRekan::where('tahun', $request->tahun)->where('rekan_id', $request->id);
+            $pajak_rekan->update([
                 'biaya_jasa' => $request->biaya_jasa,
             ]);
+
+            if (PajakRekan::orderBy('tahun', 'DESC')->first()->tahun == $request->tahun) {
+                $rekan->update([
+                    'biaya_jasa' => $request->biaya_jasa,
+                ]);
+            }
 
             return ResponseFormatter::success(
                 $rekan,

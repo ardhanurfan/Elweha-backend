@@ -50,7 +50,7 @@ class PajakRekanController extends Controller
         }
 
         if ($year) {
-            $pajak_rekan->where('tahun', $year)->orWhere('tahun', 0);
+            $pajak_rekan->where('tahun', $year);
         }
 
         $pajak_rekan = $pajak_rekan->orderBy('tahun')->orderBy('bulan')->paginate($limit)->toArray();
@@ -147,9 +147,7 @@ class PajakRekanController extends Controller
         if ($search) {
             $rekan->where(
                 function ($query) use ($search) {
-                    return $query
-                        ->orWhere('nama', 'like', '%' . $search . '%')
-                        ->orWhere('biaya_jasa', 'like', '%' . $search . '%');
+                    return $query->orWhere('nama', 'like', '%' . $search . '%');
                 }
             );
         }
@@ -224,6 +222,7 @@ class PajakRekanController extends Controller
             $pph = 0;
             $pph_akumulasi = 0;
             $transfer = 0;
+            $biaya_jasa = $rkn['biaya_jasa'];
             foreach ($data as $dt) {
                 if ($rkn['nama'] == $dt['nama']) {
                     $jumlah_akta += $dt['jumlah_akta'];
@@ -233,13 +232,14 @@ class PajakRekanController extends Controller
                     $pph += $dt['pph'];
                     $pph_akumulasi += $dt['pph_akumulasi'];
                     $transfer += $dt['transfer'];
+                    $biaya_jasa = $dt['biaya_jasa'];
                 }
             }
             array_push($data_per_tahun, [
                 'rekan_id' => $rkn['id'],
                 'nama' => $rkn['nama'],
                 'jumlah_akta' => $jumlah_akta,
-                'biaya_jasa' => $rkn['biaya_jasa'],
+                'biaya_jasa' => $biaya_jasa,
                 'jasa_bruto' => $jasa_bruto,
                 'dpp' => $dpp,
                 'dpp_akumulasi' => $dpp_akumulasi,

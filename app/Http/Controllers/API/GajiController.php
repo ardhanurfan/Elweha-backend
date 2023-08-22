@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\Gaji;
+use App\Models\Kehadiran;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,17 +19,22 @@ class GajiController extends Controller
     {
         try {
             $request->validate([
-                'nama_karyawan' => 'required',
+                'nama_karyawan' => 'required|unique:gaji,nama_karyawan',
                 'jenis_gaji' => 'required',
-                'jumlah_gaji' => 'required|integer',
+                'besar_gaji' => 'required|integer',
             ]);
 
             $gaji = Gaji::create([
                 'user_id' => Auth::id(),
                 'nama_karyawan' => $request->nama_karyawan,
                 'jenis_gaji' => $request->jenis_gaji,
-                'jumlah_gaji' => $request->jumlah_gaji,
-                
+                'besar_gaji' => $request->besar_gaji,
+
+            ]);
+
+            Kehadiran::create([
+                'gaji_id' => $gaji->id,
+                'besar_gaji' => $gaji->besar_gaji,
             ]);
 
             return ResponseFormatter::success(
@@ -62,35 +68,39 @@ class GajiController extends Controller
         $user_id = $request->input('user_id');
         $limit = $request->input('limit');
         $search = $request->input('search');
+        $jenis = $request->input('jenis', []);
+        $month = $request->input('month');
+        $year = $request->input('year');
 
-        $gaji = Gaji::with(['user']);
+        $gaji = Gaji::with(['user', 'variabel', 'skil'])->join('kehadiran', 'kehadiran.gaji_id', '=', 'gaji.id')->select('gaji.*', 'kehadiran.id as kehadiran_id', 'kehadiran.bulan', 'kehadiran.tahun', 'kehadiran.kehadiran_actual', 'kehadiran.kehadiran_standart', 'kehadiran.keterlambatan');
 
         if ($user_id) {
             $gaji->where('user_id', $user_id);
+        }
+
+        if ($jenis) {
+            $gaji->where(function ($query) use ($jenis) {
+                foreach ($jenis as $value) {
+                    $query->orWhere('jenis_gaji', $value);
+                }
+                return $query;
+            });
+        }
+
+        if ($month && $year) {
+            $gaji->where('bulan', $month)->where('tahun', $year);
         }
 
         if ($search) {
             $gaji->select("gaji.*")
                 ->where(function ($query) use ($search) {
                     return $query
-                        ->orWhere('nama_karyawan', 'like', '%' . $search . '%')
-                        ->orWhere('kehadiran', 'like', '%' . $search . '%')
-                        ->orWhere('jenis_gaji', 'like', '%' . $search . '%')
-                        ->orWhere('jumlah_gaji', 'like', '%' . $search . '%')
-                        ->orWhere('jumlah_bonus', 'like', '%' . $search . '%')
-                        ->orWhere('pph_dipotong', 'like', '%' . $search . '%')
-                        ->orWhere('pajak_akumulasi', 'like', '%' . $search . '%')
-                        ->orWhere('transfer', 'like', '%' . $search . '%');
+                        ->orWhere('nama_karyawan', 'like', '%' . $search . '%');
                 });
         }
 
-        $total = Gaji::sum('transfer');
-
         return ResponseFormatter::success(
-            [
-                'total_gaji' => $total,
-                'table' => $gaji->paginate($limit)
-            ],
+            $gaji->paginate($limit),
             'Get Gaji Successfully'
         );
     }
@@ -101,14 +111,10 @@ class GajiController extends Controller
         try {
             $request->validate([
                 'id' => 'required',
-                'nama_karyawan' => 'required',
-                'kehadiran' => 'required|integer',
+                'nama_karyawan' => 'required|unique:gaji,nama_karyawan,' . $request->id,
                 'jenis_gaji' => 'required',
-                'jumlah_gaji' => 'required|integer',
-                'jumlah_bonus' => 'required|integer',
-                'pph_dipotong' => 'required|integer',
-                'pajak_akumulasi' => 'required|integer',
-                'transfer' => 'required|integer',
+                'besar_gaji' => 'required|integer',
+
             ]);
 
             $gaji = Gaji::find($request->id);
@@ -120,19 +126,15 @@ class GajiController extends Controller
                         'error' => 'Data not found',
                     ],
                     'Edit Gaji Failed',
-                    404,);
+                    404,
+                );
             }
 
             $gaji->update([
                 'user_id' => Auth::id(),
                 'nama_karyawan' => $request->nama_karyawan,
-                'kehadiran' => $request->kehadiran,
                 'jenis_gaji' => $request->jenis_gaji,
-                'jumlah_gaji' => $request->jumlah_gaji,
-                'jumlah_bonus' => $request->jumlah_bonus,
-                'pph_dipotong' => $request->pph_dipotong,
-                'pajak_akumulasi' => $request->pajak_akumulasi,
-                'transfer' => $request->transfer,
+                'besar_gaji' => $request->besar_gaji,
             ]);
 
             return ResponseFormatter::success(

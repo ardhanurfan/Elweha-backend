@@ -6,6 +6,7 @@ use App\Http\Controllers\API\JenisBarangController;
 use App\Http\Controllers\API\JenisPengeluaranController;
 use App\Http\Controllers\API\KategoriPendapatanController;
 use App\Http\Controllers\API\KategoriPengeluaranController;
+use App\Http\Controllers\API\KehadiranController;
 use App\Http\Controllers\API\KoreksiController;
 use App\Http\Controllers\API\PajakRekanAktaController;
 use App\Http\Controllers\API\PajakRekanController;
@@ -13,7 +14,9 @@ use App\Http\Controllers\API\PendapatanController;
 use App\Http\Controllers\API\PengambilBarangController;
 use App\Http\Controllers\API\PengeluaranController;
 use App\Http\Controllers\API\RekanController;
+use App\Http\Controllers\API\SkilBonusController;
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\VariabelBonusController;
 use App\Models\Rekan;
 use Illuminate\Support\Facades\Route;
 
@@ -89,6 +92,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('gaji', [GajiController::class, 'read']);
     Route::post('update-gaji', [GajiController::class, 'update']);
     Route::post('delete-gaji', [GajiController::class, 'delete']);
+
+    // Kehadiran
+    Route::post('kehadiran', [KehadiranController::class, 'create']);
+
+    // Skil Bonus
+    Route::post('skil-bonus', [SkilBonusController::class, 'create']);
+    Route::post('delete-skil-bonus', [SkilBonusController::class, 'delete']);
+
+    // Variabel Bonus
+    Route::post('variabel-bonus', [VariabelBonusController::class, 'create']);
+    Route::post('delete-variabel-bonus', [VariabelBonusController::class, 'delete']);
 
     // Jenis Barang
     Route::post('jenis-barang', [JenisBarangController::class, 'create']);

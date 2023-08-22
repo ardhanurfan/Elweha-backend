@@ -19,17 +19,27 @@ class Gaji extends Model
     protected $fillable = [
         'user_id',
         'nama_karyawan',
-        'kehadiran',
         'jenis_gaji',
-        'jumlah_gaji',
-        'jumlah_bonus',
-        'pph_dipotong',
-        'pajak_akumulasi',
-        'transfer',
+        'besar_gaji',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function kehadiran()
+    {
+        return $this->hasMany(Kehadiran::class, 'gaji_id', 'id');
+    }
+
+    public function skil()
+    {
+        return $this->hasMany(SkilBonus::class, 'gaji_id', 'id');
+    }
+
+    public function variabel()
+    {
+        return $this->hasMany(VariabelBonus::class, 'gaji_id', 'id');
     }
 }

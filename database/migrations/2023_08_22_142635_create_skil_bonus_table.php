@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('gaji', function (Blueprint $table) {
+        Schema::create('skil_bonus', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null')->onUpdate('cascade');
-            $table->string('nama_karyawan');
-            $table->string('jenis_gaji');
-            $table->integer('besar_gaji');
+            $table->foreignId('gaji_id')->constrained('gaji')->onDelete('cascade')->onUpdate('cascade');
+            $table->string('nama_bonus');
+            $table->integer('besar_bonus');
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('gaji');
+        Schema::dropIfExists('skil_bonus');
     }
 };
