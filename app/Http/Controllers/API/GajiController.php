@@ -88,15 +88,14 @@ class GajiController extends Controller
         }
 
         if ($month && $year) {
-            $gaji->where('bulan', $month)->where('tahun', $year);
+            $gaji->where('bulan', $month)->where('tahun', $year)->orWhere('bulan', 0);
         }
 
         if ($search) {
-            $gaji->select("gaji.*")
-                ->where(function ($query) use ($search) {
-                    return $query
-                        ->orWhere('nama_karyawan', 'like', '%' . $search . '%');
-                });
+            $gaji->where(function ($query) use ($search) {
+                return $query
+                    ->orWhere('nama_karyawan', 'like', '%' . $search . '%');
+            });
         }
 
         return ResponseFormatter::success(
@@ -114,6 +113,8 @@ class GajiController extends Controller
                 'nama_karyawan' => 'required|unique:gaji,nama_karyawan,' . $request->id,
                 'jenis_gaji' => 'required',
                 'besar_gaji' => 'required|integer',
+                'tahun' => 'required',
+                'bulan' => 'required',
 
             ]);
 
@@ -134,8 +135,19 @@ class GajiController extends Controller
                 'user_id' => Auth::id(),
                 'nama_karyawan' => $request->nama_karyawan,
                 'jenis_gaji' => $request->jenis_gaji,
+            ]);
+
+            $kehadiran = Kehadiran::where('tahun', $request->tahun)->where('bulan', $request->bulan)->where('gaji_id', $request->id);
+            $kehadiran->update([
                 'besar_gaji' => $request->besar_gaji,
             ]);
+
+            $terbaru = Kehadiran::orderBy('tahun', 'DESC')->orderBy('bulan', 'DESC')->first();
+            if ($terbaru->tahun == $request->tahun && $terbaru->bulan == $request->bulan) {
+                $gaji->update([
+                    'besar_gaji' => $request->besar_gaji,
+                ]);
+            }
 
             return ResponseFormatter::success(
                 $gaji,
