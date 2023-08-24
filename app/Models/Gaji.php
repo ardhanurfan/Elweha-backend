@@ -27,19 +27,4 @@ class Gaji extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
-
-    public function kehadiran()
-    {
-        return $this->hasMany(Kehadiran::class, 'gaji_id', 'id');
-    }
-
-    public function skil()
-    {
-        return $this->hasMany(SkilBonus::class, 'gaji_id', 'id');
-    }
-
-    public function variabel()
-    {
-        return $this->hasMany(VariabelBonus::class, 'gaji_id', 'id');
-    }
 }

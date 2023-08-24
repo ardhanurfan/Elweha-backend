@@ -30,4 +30,14 @@ class Kehadiran extends Model
     {
         return $this->belongsTo(Gaji::class, 'gaji_id', 'id');
     }
+
+    public function skil()
+    {
+        return $this->hasMany(SkilBonus::class, 'kehadiran_id', 'id');
+    }
+
+    public function variabel()
+    {
+        return $this->hasMany(VariabelBonus::class, 'kehadiran_id', 'id');
+    }
 }

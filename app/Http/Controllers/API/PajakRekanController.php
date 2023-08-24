@@ -140,9 +140,6 @@ class PajakRekanController extends Controller
             $pajak_rekan->where('pajak_rekan.user_id', $user_id);
         }
 
-        if ($year) {
-            $pajak_rekan->where('tahun', $year)->orWhere('tahun', 0);
-        }
 
         if ($search) {
             $rekan->where(
@@ -150,6 +147,10 @@ class PajakRekanController extends Controller
                     return $query->orWhere('nama', 'like', '%' . $search . '%');
                 }
             );
+        }
+
+        if ($year) {
+            $pajak_rekan->where('tahun', $year)->orWhere('tahun', 0);
         }
 
         $rekan = $rekan->orderBy('created_at', 'Desc')->paginate($limit)->toArray();

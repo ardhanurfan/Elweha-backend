@@ -15,17 +15,22 @@ class VariabelBonusController extends Controller
     public function create(Request $request)
     {
         try {
-            $request->validate([
-                'nama_bonus' => 'required',
-                'besar_bonus' => 'required',
-                'gaji_id' => 'required',
-                'jumlah' => 'required',
-            ]);
+            $request->validate(
+                [
+                    'nama_bonus' => 'required',
+                    'besar_bonus' => 'required',
+                    'kehadiran_id' => 'required',
+                    'jumlah' => 'required',
+                ],
+                [
+                    'kehadiran_id.required' => 'Presensi bulan ini belum diupload',
+                ]
+            );
 
             $variabel_bonus = VariabelBonus::create([
                 'nama_bonus' => $request->nama_bonus,
                 'besar_bonus' => $request->besar_bonus,
-                'gaji_id' => $request->gaji_id,
+                'kehadiran_id' => $request->kehadiran_id,
                 'jumlah' => $request->jumlah,
                 'total' => $request->jumlah * $request->besar_bonus,
             ]);
@@ -60,11 +65,11 @@ class VariabelBonusController extends Controller
     {
         try {
             $request->validate([
-                'gaji_id' => 'required',
+                'kehadiran_id' => 'required',
                 'id' => 'required',
             ]);
 
-            $bonus_variabel = VariabelBonus::where('gaji_id', $request->gaji_id)->where('id', $request->id)->first();
+            $bonus_variabel = VariabelBonus::where('kehadiran_id', $request->kehadiran_id)->where('id', $request->id)->first();
 
             if (!$bonus_variabel) {
                 return ResponseFormatter::error(

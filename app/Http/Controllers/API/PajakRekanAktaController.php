@@ -27,7 +27,8 @@ class PajakRekanAktaController extends Controller
 
             // Cek Ketersediaan Nomor Akta
             $sold = [];
-            $get_no = PajakRekanAkta::select('no_awal', 'no_akhir')->get();
+            $tahun = date('Y', strtotime($request->tanggal));
+            $get_no = PajakRekanAkta::select('no_awal', 'no_akhir')->whereYear('tanggal', $tahun)->get();
             foreach ($get_no as $row) {
                 for ($i = $row->no_awal; $i <= $row->no_akhir; $i++) {
                     array_push($sold, $i);
@@ -117,8 +118,13 @@ class PajakRekanAktaController extends Controller
         $user_id = $request->input('user_id');
         $limit = $request->input('limit');
         $rekan_id = $request->input('rekan_id');
+        $year = $request->input('year');
 
         $pajak_rekan_akta = PajakRekanAkta::with(['user'])->where('rekan_id', $rekan_id);
+
+        if ($year) {
+            $pajak_rekan_akta->whereYear('tanggal', $year);
+        }
 
         if ($user_id) {
             $pajak_rekan_akta->where('user_id', $user_id);
@@ -159,7 +165,8 @@ class PajakRekanAktaController extends Controller
 
             // Cek Ketersediaan Nomor Akta, kecuali diirinya sendiri
             $sold = [];
-            $get_no = PajakRekanAkta::select('no_awal', 'no_akhir')->where('id', '!=', $request->id)->get();
+            $tahun = date('Y', strtotime($request->tanggal));
+            $get_no = PajakRekanAkta::select('no_awal', 'no_akhir')->where('id', '!=', $request->id)->whereYear('tanggal', $tahun)->get();
             foreach ($get_no as $row) {
                 for ($i = $row->no_awal; $i <= $row->no_akhir; $i++) {
                     array_push($sold, $i);

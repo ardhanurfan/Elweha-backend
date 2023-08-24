@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Models\Kehadiran;
 use App\Models\SkilBonus;
 use Exception;
 use Illuminate\Http\Request;
@@ -15,16 +16,21 @@ class SkilBonusController extends Controller
     public function create(Request $request)
     {
         try {
-            $request->validate([
-                'nama_bonus' => 'required',
-                'besar_bonus' => 'required',
-                'gaji_id' => 'required',
-            ]);
+            $request->validate(
+                [
+                    'nama_bonus' => 'required',
+                    'besar_bonus' => 'required',
+                    'kehadiran_id' => 'required',
+                ],
+                [
+                    'kehadiran_id.required' => 'Presensi bulan ini belum diupload',
+                ]
+            );
 
             $skil_bonus = SkilBonus::create([
                 'nama_bonus' => $request->nama_bonus,
                 'besar_bonus' => $request->besar_bonus,
-                'gaji_id' => $request->gaji_id,
+                'kehadiran_id' => $request->kehadiran_id,
             ]);
 
             return ResponseFormatter::success(
@@ -57,11 +63,11 @@ class SkilBonusController extends Controller
     {
         try {
             $request->validate([
-                'gaji_id' => 'required',
+                'kehadiran_id' => 'required',
                 'id' => 'required',
             ]);
 
-            $skil_bonus = SkilBonus::where('gaji_id', $request->gaji_id)->where('id', $request->id)->first();
+            $skil_bonus = SkilBonus::where('kehadiran_id', $request->kehadiran_id)->where('id', $request->id)->first();
 
             if (!$skil_bonus) {
                 return ResponseFormatter::error(

@@ -17,7 +17,7 @@ class SkilBonus extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'gaji_id',
+        'kehadiran_id',
         'nama_bonus',
         'besar_bonus',
     ];

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('skil_bonus', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('gaji_id')->constrained('gaji')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('kehadiran_id')->constrained('kehadiran')->onDelete('cascade')->onUpdate('cascade');
             $table->string('nama_bonus');
             $table->integer('besar_bonus');
             $table->timestamps();

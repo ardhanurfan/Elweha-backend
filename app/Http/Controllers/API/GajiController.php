@@ -66,13 +66,18 @@ class GajiController extends Controller
     public function read(Request $request)
     {
         $user_id = $request->input('user_id');
+        $id = $request->input('id');
         $limit = $request->input('limit');
         $search = $request->input('search');
         $jenis = $request->input('jenis', []);
         $month = $request->input('month');
         $year = $request->input('year');
 
-        $gaji = Gaji::with(['user', 'variabel', 'skil'])->join('kehadiran', 'kehadiran.gaji_id', '=', 'gaji.id')->select('gaji.*', 'kehadiran.id as kehadiran_id', 'kehadiran.bulan', 'kehadiran.tahun', 'kehadiran.kehadiran_actual', 'kehadiran.kehadiran_standart', 'kehadiran.keterlambatan');
+        $gaji = Kehadiran::with(['variabel', 'skil'])->join('gaji', 'kehadiran.gaji_id', '=', 'gaji.id')->select('gaji.id as gaji_id', 'gaji.user_id', 'gaji.nama_karyawan', 'gaji.jenis_gaji', 'gaji.besar_gaji', 'kehadiran.*');
+
+        if ($id) {
+            $gaji->where('gaji.id', $id);
+        }
 
         if ($user_id) {
             $gaji->where('user_id', $user_id);
@@ -87,16 +92,14 @@ class GajiController extends Controller
             });
         }
 
+        if ($search) {
+            $gaji->where('nama_karyawan', 'like', '%' . $search . '%');
+        }
+
         if ($month && $year) {
             $gaji->where('bulan', $month)->where('tahun', $year)->orWhere('bulan', 0);
         }
 
-        if ($search) {
-            $gaji->where(function ($query) use ($search) {
-                return $query
-                    ->orWhere('nama_karyawan', 'like', '%' . $search . '%');
-            });
-        }
 
         return ResponseFormatter::success(
             $gaji->paginate($limit),
