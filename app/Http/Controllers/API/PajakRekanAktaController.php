@@ -326,4 +326,38 @@ class PajakRekanAktaController extends Controller
             );
         }
     }
+
+    //Akta Tersisa
+    public function getAktaTersisa(request $request)
+    {
+        $akta = PajakRekanAkta::all();
+        $aktaFill = [];
+        foreach ($akta as $row) {
+            for ($i = $row->no_awal; $i <= $row->no_akhir; $i++) {
+                array_push($aktaFill, $i);
+            }
+        }
+        sort($aktaFill);
+        $temp = [];
+        $result = "";
+        for ($i = 1; $i <= $aktaFill[sizeof($aktaFill) - 1]; $i++) {
+            if (!in_array($i, $aktaFill)) {
+                array_push($temp, $i);
+            } else {
+                if (sizeof($temp) > 0) {
+                    if (sizeof($temp) == 1) {
+                        $result = $result . $i . ", ";
+                    } else if (sizeof($temp) > 1) {
+                        $result = $result . $temp[0] . "-" . $temp[sizeof($temp) - 1] . ", ";
+                    }
+                    $temp = [];
+                }
+            }
+        }
+        $result = $result . ">" . $aktaFill[sizeof($aktaFill) - 1];
+        return ResponseFormatter::success(
+            $result,
+            'Get Akta Sisa Successfully'
+        );
+    }
 }

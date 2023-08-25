@@ -68,6 +68,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Rekan
     Route::post('rekan', [RekanController::class, 'create']);
+    Route::get('rekan', [RekanController::class, 'read']);
     Route::post('update-rekan', [RekanController::class, 'update']);
     Route::post('delete-rekan', [RekanController::class, 'delete']);
 
@@ -80,6 +81,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('pajak-rekan-akta', [PajakRekanAktaController::class, 'read']);
     Route::post('update-pajak-rekan-akta', [PajakRekanAktaController::class, 'update']);
     Route::post('delete-pajak-rekan-akta', [PajakRekanAktaController::class, 'delete']);
+    Route::get('akta-tersisa', [PajakRekanAktaController::class, 'getAktaTersisa']);
 
     // Koreksi
     Route::post('koreksi', [KoreksiController::class, 'create']);
