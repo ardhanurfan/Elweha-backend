@@ -138,6 +138,7 @@ class PajakRekanController extends Controller
 
         if ($user_id) {
             $pajak_rekan->where('pajak_rekan.user_id', $user_id);
+            $rekan->where('rekan.user_id', $user_id);
         }
 
 

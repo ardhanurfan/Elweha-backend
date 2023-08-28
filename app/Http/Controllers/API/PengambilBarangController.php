@@ -96,7 +96,7 @@ class PengambilBarangController extends Controller
         $ambil = PengambilBarang::with(['user', 'barang', 'barang.jenis']);
 
         if ($user_id) {
-            $ambil->where('user_id', $user_id);
+            $ambil->where('pengambil_barang.user_id', $user_id);
         }
 
         if ($jenis_id) {
