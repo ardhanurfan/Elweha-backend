@@ -62,8 +62,11 @@ class RekanController extends Controller
     // READ
     public function read(Request $request)
     {
-        $rekan = Rekan::all();
-        return ResponseFormatter::success($rekan, 'Get Rekan Data Success');
+        $rekan = Rekan::query();
+        if ($request->id) {
+            $rekan->where('id', $request->id)->first();
+        }
+        return ResponseFormatter::success($rekan->get(), 'Get Rekan Data Success');
     }
 
     // UPDATE

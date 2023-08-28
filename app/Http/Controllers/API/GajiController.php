@@ -223,4 +223,14 @@ class GajiController extends Controller
             );
         }
     }
+
+    // READ All
+    public function readAll(Request $request)
+    {
+        $gaji = Gaji::query();
+        if ($request->id) {
+            $gaji->where('id', $request->id)->first();
+        }
+        return ResponseFormatter::success($gaji->get(), 'Get Rekan Data Success');
+    }
 }
