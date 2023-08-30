@@ -333,32 +333,58 @@ class PajakRekanAktaController extends Controller
         $rekan_id = $request->input('rekan_id');
         $year = $request->input('year');
 
-        $akta = PajakRekanAkta::whereYear('tanggal', $year)->where('rekan_id', $rekan_id)->get();
+        $akta = PajakRekanAkta::query();
 
-        $aktaFill = [];
-        foreach ($akta as $row) {
-            for ($i = $row->no_awal; $i <= $row->no_akhir; $i++) {
-                array_push($aktaFill, $i);
-            }
+        if (!$year) {
+            return ResponseFormatter::success(
+                "Belum pilih period",
+                'Get Akta Sisa Successfully'
+            );
         }
-        sort($aktaFill);
-        $temp = [];
-        $result = "";
-        for ($i = 1; $i <= $aktaFill[sizeof($aktaFill) - 1]; $i++) {
-            if (!in_array($i, $aktaFill)) {
-                array_push($temp, $i);
-            } else {
-                if (sizeof($temp) > 0) {
-                    if (sizeof($temp) == 1) {
-                        $result = $result . $i . ", ";
-                    } else if (sizeof($temp) > 1) {
-                        $result = $result . $temp[0] . "-" . $temp[sizeof($temp) - 1] . ", ";
-                    }
-                    $temp = [];
+
+        if (!$rekan_id) {
+            return ResponseFormatter::success(
+                "Belum pilih rekan",
+                'Get Akta Sisa Successfully'
+            );
+        }
+
+
+        if ($rekan_id && $year) {
+            $akta->whereYear('tanggal', $year)->where('rekan_id', $rekan_id);
+        }
+
+        if (!$akta->first()) { // Jika belum ada akta
+            $result = "> 0";
+        } else {
+            $akta = $akta->get();
+
+            $aktaFill = [];
+            foreach ($akta as $row) {
+                for ($i = $row->no_awal; $i <= $row->no_akhir; $i++) {
+                    array_push($aktaFill, $i);
                 }
             }
+            sort($aktaFill);
+            $temp = [];
+            $result = "";
+            for ($i = 1; $i <= $aktaFill[sizeof($aktaFill) - 1]; $i++) {
+                if (!in_array($i, $aktaFill)) {
+                    array_push($temp, $i);
+                } else {
+                    if (sizeof($temp) > 0) {
+                        if (sizeof($temp) == 1) {
+                            $result = $result . $i . ", ";
+                        } else if (sizeof($temp) > 1) {
+                            $result = $result . $temp[0] . "-" . $temp[sizeof($temp) - 1] . ", ";
+                        }
+                        $temp = [];
+                    }
+                }
+            }
+            $result = $result . ">" . $aktaFill[sizeof($aktaFill) - 1];
         }
-        $result = $result . ">" . $aktaFill[sizeof($aktaFill) - 1];
+
         return ResponseFormatter::success(
             $result,
             'Get Akta Sisa Successfully'
