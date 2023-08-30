@@ -330,7 +330,11 @@ class PajakRekanAktaController extends Controller
     //Akta Tersisa
     public function getAktaTersisa(request $request)
     {
-        $akta = PajakRekanAkta::all();
+        $rekan_id = $request->input('rekan_id');
+        $year = $request->input('year');
+
+        $akta = PajakRekanAkta::whereYear('tanggal', $year)->where('rekan_id', $rekan_id)->get();
+
         $aktaFill = [];
         foreach ($akta as $row) {
             for ($i = $row->no_awal; $i <= $row->no_akhir; $i++) {
