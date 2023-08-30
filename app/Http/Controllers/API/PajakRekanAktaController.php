@@ -349,15 +349,11 @@ class PajakRekanAktaController extends Controller
             );
         }
 
+        $akta = $akta->whereYear('tanggal', $year)->where('rekan_id', $rekan_id)->get();
 
-        if ($rekan_id && $year) {
-            $akta->whereYear('tanggal', $year)->where('rekan_id', $rekan_id);
-        }
-
-        if (!$akta->first()) { // Jika belum ada akta
+        if (sizeof($akta) == 0) { // Jika belum ada akta
             $result = "> 0";
         } else {
-            $akta = $akta->get();
 
             $aktaFill = [];
             foreach ($akta as $row) {
