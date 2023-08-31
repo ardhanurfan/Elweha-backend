@@ -70,8 +70,8 @@ class PajakRekanController extends Controller
                 $jasa_bruto = $data_bulan['biaya_jasa'] * $data_bulan['jumlah_akta'];
                 $dpp = $jasa_bruto * 0.5;
                 $dpp_akumulasi = $dpp + $last['dpp_akumulasi'];
-                $pph = PajakRekanController::hitungPajak($dpp_akumulasi);
-                $pph_akumulasi = $pph + $last['pph_akumulasi'];
+                $pph_akumulasi = PajakRekanController::hitungPajak($dpp_akumulasi);
+                $pph = $pph_akumulasi - $last['pph_akumulasi'];
                 $transfer = $jasa_bruto - $pph;
                 array_push($data, [
                     'id' => $data_bulan['id'],
@@ -92,8 +92,8 @@ class PajakRekanController extends Controller
                 $jasa_bruto = $data_bulan['biaya_jasa'] * $data_bulan['jumlah_akta'];
                 $dpp = $jasa_bruto * 0.5;
                 $dpp_akumulasi = $dpp;
-                $pph = PajakRekanController::hitungPajak($dpp_akumulasi);
-                $pph_akumulasi = $pph;
+                $pph_akumulasi = PajakRekanController::hitungPajak($dpp_akumulasi);
+                $pph = $pph_akumulasi;
                 $transfer = $jasa_bruto - $pph;
                 array_push($data, [
                     'id' => $data_bulan['id'],
@@ -170,9 +170,8 @@ class PajakRekanController extends Controller
                 $jasa_bruto = $data_bulan['biaya_jasa'] * $data_bulan['jumlah_akta'];
                 $dpp = $jasa_bruto * 0.5;
                 $dpp_akumulasi = $dpp + $last['dpp_akumulasi'];
-                $pph = PajakRekanController::hitungPajak($dpp_akumulasi);
-                $pph_akumulasi = $pph + $last['pph_akumulasi'];
-                $transfer = $jasa_bruto - $pph;
+                $pph_akumulasi = PajakRekanController::hitungPajak($dpp_akumulasi);
+                $transfer = $jasa_bruto - $pph_akumulasi;
                 array_push($data, [
                     'id' => $data_bulan['id'],
                     'rekan_id' => $data_bulan['rekan']['id'],
@@ -180,9 +179,7 @@ class PajakRekanController extends Controller
                     'jumlah_akta' => $data_bulan['jumlah_akta'],
                     'biaya_jasa' => $data_bulan['biaya_jasa'],
                     'jasa_bruto' => $jasa_bruto,
-                    'dpp' => $dpp,
                     'dpp_akumulasi' => $dpp_akumulasi,
-                    'pph' => $pph,
                     'pph_akumulasi' => $pph_akumulasi,
                     'transfer' => $transfer,
                     'bulan' => $data_bulan['bulan'],
@@ -192,9 +189,8 @@ class PajakRekanController extends Controller
                 $jasa_bruto = $data_bulan['biaya_jasa'] * $data_bulan['jumlah_akta'];
                 $dpp = $jasa_bruto * 0.5;
                 $dpp_akumulasi = $dpp;
-                $pph = PajakRekanController::hitungPajak($dpp_akumulasi);
-                $pph_akumulasi = $pph;
-                $transfer = $jasa_bruto - $pph;
+                $pph_akumulasi = PajakRekanController::hitungPajak($dpp_akumulasi);
+                $transfer = $jasa_bruto - $pph_akumulasi;
                 array_push($data, [
                     'id' => $data_bulan['id'],
                     'rekan_id' => $data_bulan['rekan']['id'],
@@ -202,9 +198,7 @@ class PajakRekanController extends Controller
                     'jumlah_akta' => $data_bulan['jumlah_akta'],
                     'biaya_jasa' => $data_bulan['biaya_jasa'],
                     'jasa_bruto' => $jasa_bruto,
-                    'dpp' => $dpp,
                     'dpp_akumulasi' => $dpp_akumulasi,
-                    'pph' => $pph,
                     'pph_akumulasi' => $pph_akumulasi,
                     'transfer' => $transfer,
                     'bulan' => $data_bulan['bulan'],
@@ -228,13 +222,11 @@ class PajakRekanController extends Controller
             foreach ($data as $dt) {
                 if ($rkn['nama'] == $dt['nama']) {
                     $jumlah_akta += $dt['jumlah_akta'];
-                    $jasa_bruto += $dt['jasa_bruto'];
-                    $dpp += $dt['dpp'];
-                    $dpp_akumulasi += $dt['dpp_akumulasi'];
-                    $pph += $dt['pph'];
-                    $pph_akumulasi += $dt['pph_akumulasi'];
-                    $transfer += $dt['transfer'];
                     $biaya_jasa = $dt['biaya_jasa'];
+                    $jasa_bruto += $dt['jasa_bruto'];
+                    $dpp_akumulasi = $dt['dpp_akumulasi'];
+                    $pph_akumulasi = $dt['pph_akumulasi'];
+                    $transfer = $jasa_bruto - $pph_akumulasi;
                 }
             }
             array_push($data_per_tahun, [
@@ -243,9 +235,7 @@ class PajakRekanController extends Controller
                 'jumlah_akta' => $jumlah_akta,
                 'biaya_jasa' => $biaya_jasa,
                 'jasa_bruto' => $jasa_bruto,
-                'dpp' => $dpp,
                 'dpp_akumulasi' => $dpp_akumulasi,
-                'pph' => $pph,
                 'pph_akumulasi' => $pph_akumulasi,
                 'transfer' => $transfer,
             ]);

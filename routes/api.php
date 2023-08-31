@@ -94,7 +94,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('gaji', [GajiController::class, 'read']);
     Route::post('update-gaji', [GajiController::class, 'update']);
     Route::post('delete-gaji', [GajiController::class, 'delete']);
-    Route::get('gaji-all', [GajiController::class, 'readAll']);
 
     // Kehadiran
     Route::post('kehadiran', [KehadiranController::class, 'create']);

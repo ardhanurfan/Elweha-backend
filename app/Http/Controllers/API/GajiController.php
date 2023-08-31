@@ -74,9 +74,10 @@ class GajiController extends Controller
         $year = $request->input('year');
 
         $gaji = Kehadiran::with(['variabel', 'skil'])->join('gaji', 'kehadiran.gaji_id', '=', 'gaji.id')->select('gaji.id as gaji_id', 'gaji.user_id', 'gaji.nama_karyawan', 'gaji.jenis_gaji', 'gaji.besar_gaji', 'kehadiran.*');
+        $gaji_all = Gaji::query();
 
         if ($id) {
-            $gaji->where('gaji.id', $id);
+            $gaji->where('gaji_id', $id);
         }
 
         if ($user_id) {
@@ -86,7 +87,13 @@ class GajiController extends Controller
         if ($jenis) {
             $gaji->where(function ($query) use ($jenis) {
                 foreach ($jenis as $value) {
-                    $query->orWhere('jenis_gaji', $value);
+                    $query->orWhere('jenis_gaji', 'like', $value);
+                }
+                return $query;
+            });
+            $gaji_all->where(function ($query) use ($jenis) {
+                foreach ($jenis as $value) {
+                    $query->orWhere('jenis_gaji', 'like', $value);
                 }
                 return $query;
             });
@@ -94,15 +101,82 @@ class GajiController extends Controller
 
         if ($search) {
             $gaji->where('nama_karyawan', 'like', '%' . $search . '%');
+            $gaji_all->where('nama_karyawan', 'like', '%' . $search . '%');
         }
 
         if ($month && $year) {
-            $gaji->where('bulan', $month)->where('tahun', $year)->orWhere('bulan', 0);
+            $gaji->where('bulan', $month)->where('tahun', $year);
         }
 
+        $gaji_all = $gaji_all->orderBy('created_at', 'Desc')->paginate($id ? sizeof($gaji_all->get()) : $limit)->toArray(); // jika ambil by id data diambil semua
+        $gaji = $gaji->get()->toArray();
+
+        $data_per_bulan = [];
+        $data_kosong = [];
+        foreach ($gaji_all['data'] as $gjAll) {
+            $isFound = false;
+            foreach ($gaji as $gjGet) {
+                if ($gjAll['id'] == $gjGet['gaji_id']) {
+                    array_push($data_per_bulan, [
+                        'gaji_id' => $gjAll['id'],
+                        'nama_karyawan' => $gjAll['nama_karyawan'],
+                        'jenis_gaji' => $gjAll['jenis_gaji'],
+                        'besar_gaji' => $gjAll['besar_gaji'],
+                        'bulan' => $gjGet['bulan'],
+                        'tahun' => $gjGet['tahun'],
+                        'kehadiran_actual' => $gjGet['kehadiran_actual'],
+                        'kehadiran_standart' => $gjGet['kehadiran_standart'],
+                        'keterlambatan' => $gjGet['keterlambatan'],
+                        'variabel' => $gjGet['variabel'],
+                        'skil' => $gjGet['skil'],
+                    ]);
+                    $isFound = true;
+                }
+            }
+
+            if (!$isFound) {
+                if ($id) { // handle jika get by id
+                    if ($id == $gjAll['id']) {
+                        array_push($data_kosong, [
+                            'gaji_id' => $gjAll['id'],
+                            'nama_karyawan' => $gjAll['nama_karyawan'],
+                            'jenis_gaji' => $gjAll['jenis_gaji'],
+                            'besar_gaji' => $gjAll['besar_gaji'],
+                            'bulan' => 0,
+                            'tahun' => 0,
+                            'kehadiran_actual' => 0,
+                            'kehadiran_standart' => 0,
+                            'keterlambatan' => 0,
+                            'variabel' => [],
+                            'skil' => [],
+                        ]);
+                    }
+                } else {
+                    array_push($data_kosong, [
+                        'gaji_id' => $gjAll['id'],
+                        'nama_karyawan' => $gjAll['nama_karyawan'],
+                        'jenis_gaji' => $gjAll['jenis_gaji'],
+                        'besar_gaji' => $gjAll['besar_gaji'],
+                        'bulan' => 0,
+                        'tahun' => 0,
+                        'kehadiran_actual' => 0,
+                        'kehadiran_standart' => 0,
+                        'keterlambatan' => 0,
+                        'variabel' => [],
+                        'skil' => [],
+                    ]);
+                }
+            }
+        }
+
+        $data_per_bulan = array_merge($data_per_bulan, $data_kosong);
 
         return ResponseFormatter::success(
-            $gaji->paginate($limit),
+            [
+                'last_page' => $gaji_all['last_page'],
+                'total' => $gaji_all['total'],
+                'data' => $data_per_bulan,
+            ],
             'Get Gaji Successfully'
         );
     }
@@ -222,15 +296,5 @@ class GajiController extends Controller
                 500,
             );
         }
-    }
-
-    // READ All
-    public function readAll(Request $request)
-    {
-        $gaji = Gaji::query();
-        if ($request->id) {
-            $gaji->where('id', $request->id)->first();
-        }
-        return ResponseFormatter::success($gaji->get(), 'Get Rekan Data Success');
     }
 }
