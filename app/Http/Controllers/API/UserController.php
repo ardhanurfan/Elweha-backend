@@ -78,7 +78,7 @@ class UserController extends Controller
         try {
             $request->validate([
                 'nama' => ['required', 'string'],
-                'email' => ['required', 'email', 'string', 'max:255', 'unique:users', 'email:dns'],
+                'email' => ['email', 'string', 'max:255', 'unique:users', 'email:dns'],
                 'username' => ['required', 'string', 'max:25', 'unique:users', 'min:6'],
                 'password' => ['required', 'string', Password::defaults()],
                 'role' => ['required', 'string', 'in:BOD,OFFICER'],
@@ -128,7 +128,7 @@ class UserController extends Controller
             $request->validate([
                 'id' => ['required'],
                 'nama' => ['required', 'string'],
-                'email' => ['required', 'email', 'string', 'max:255', 'unique:users,email,' . $request->id, 'email:dns'],
+                'email' => ['email', 'string', 'max:255', 'unique:users,email,' . $request->id, 'email:dns'],
                 'username' => ['required', 'string', 'max:25', 'unique:users,username,' . $request->id, 'min:6'],
                 'password' => ['string', Password::defaults()],
                 'role' => ['required', 'string', 'in:BOD,OFFICER'],

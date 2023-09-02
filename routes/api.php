@@ -45,6 +45,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Kategori Pendapatan
     Route::post('kategori-pendapatan', [KategoriPendapatanController::class, 'create']);
     Route::get('kategori-pendapatan', [KategoriPendapatanController::class, 'read']);
+    Route::post('delete-kategori-pendapatan', [KategoriPendapatanController::class, 'delete']);
+    Route::post('update-kategori-pendapatan', [KategoriPendapatanController::class, 'update']);
 
     // Pendapatan
     Route::post('pendapatan', [PendapatanController::class, 'create']);
@@ -55,10 +57,14 @@ Route::middleware('auth:sanctum')->group(function () {
     // Kategori Pengeluaran
     Route::post('kategori-pengeluaran', [KategoriPengeluaranController::class, 'create']);
     Route::get('kategori-pengeluaran', [KategoriPengeluaranController::class, 'read']);
+    Route::post('delete-kategori-pengeluaran', [KategoriPengeluaranController::class, 'delete']);
+    Route::post('update-kategori-pengeluaran', [KategoriPengeluaranController::class, 'update']);
 
     // Jenis Pengeluaran
     Route::post('jenis-pengeluaran', [JenisPengeluaranController::class, 'create']);
     Route::get('jenis-pengeluaran', [JenisPengeluaranController::class, 'read']);
+    Route::post('delete-jenis-pengeluaran', [JenisPengeluaranController::class, 'delete']);
+    Route::post('update-jenis-pengeluaran', [JenisPengeluaranController::class, 'update']);
 
     // Pengeluaran
     Route::post('pengeluaran', [PengeluaranController::class, 'create']);
@@ -109,6 +115,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Jenis Barang
     Route::post('jenis-barang', [JenisBarangController::class, 'create']);
     Route::get('jenis-barang', [JenisBarangController::class, 'read']);
+    Route::post('delete-jenis-barang', [JenisBarangController::class, 'delete']);
+    Route::post('update-jenis-barang', [JenisBarangController::class, 'update']);
 
     // Barang
     Route::post('barang', [BarangController::class, 'create']);
