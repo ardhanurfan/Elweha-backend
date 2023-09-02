@@ -68,6 +68,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Pengeluaran
     Route::post('pengeluaran', [PengeluaranController::class, 'create']);
+    Route::post('pengeluaran-gaji', [PengeluaranController::class, 'createLinkGaji']);
     Route::get('pengeluaran', [PengeluaranController::class, 'read']);
     Route::post('update-pengeluaran', [PengeluaranController::class, 'update']);
     Route::post('delete-pengeluaran', [PengeluaranController::class, 'delete']);

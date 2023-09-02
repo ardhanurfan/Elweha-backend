@@ -4,6 +4,8 @@ namespace App\Http\Controllers\API;
 
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Models\JenisPengeluaran;
+use App\Models\KategoriPengeluaran;
 use App\Models\Pengeluaran;
 use Exception;
 use Illuminate\Http\Request;
@@ -32,6 +34,74 @@ class PengeluaranController extends Controller
                 'jumlah' => $request->jumlah,
                 'deskripsi' => $request->deskripsi,
             ]);
+
+            return ResponseFormatter::success(
+                $pengeluaran->load(['kategori', 'jenis']),
+                'Create Pengeluaran Successfully'
+            );
+        } catch (ValidationException $error) {
+            return ResponseFormatter::error(
+                [
+                    'message' => 'Something when wrong',
+                    'error' => array_values($error->errors())[0][0],
+                ],
+                'Create Pengeluaran Failed',
+                400,
+            );
+        } catch (Exception $error) {
+            return ResponseFormatter::error(
+                [
+                    'message' => 'Something when wrong',
+                    'error' => $error,
+                ],
+                'Create Pengeluaran Failed',
+                500,
+            );
+        }
+    }
+
+    // CREATE Link Gaji
+    public function createLinkGaji(Request $request)
+    {
+        try {
+            $request->validate([
+                'tanggal' => 'required|date',
+                'jumlah' => 'required|integer',
+            ]);
+
+            $kategori_pengeluaran = KategoriPengeluaran::where('nama', 'Biaya')->first();
+            if (!$kategori_pengeluaran) {
+                $kategori_pengeluaran = KategoriPengeluaran::create([
+                    'nama' => 'Biaya',
+                ]);
+            }
+
+            $jenis_pengeluaran = JenisPengeluaran::where('nama', 'Biaya Gaji')->first();
+            if (!$jenis_pengeluaran) {
+                $jenis_pengeluaran = JenisPengeluaran::create([
+                    'nama' => 'Biaya Gaji',
+                ]);
+            }
+
+            $bulan = date('n', strtotime($request->tanggal));
+            $tahun = date('Y', strtotime($request->tanggal));
+            $pengeluaran = Pengeluaran::where('jenis_pengeluaran_id', $jenis_pengeluaran->id)->where('kategori_pengeluaran_id', $kategori_pengeluaran->id)->whereYear('tanggal', $tahun)->whereMonth('tanggal', $bulan)->first();
+            if (!$pengeluaran) {
+                $pengeluaran = Pengeluaran::create([
+                    'user_id' => Auth::id(),
+                    'kategori_pengeluaran_id' => $kategori_pengeluaran->id,
+                    'jenis_pengeluaran_id' => $jenis_pengeluaran->id,
+                    'tanggal' => $request->tanggal,
+                    'jumlah' => $request->jumlah,
+                    'deskripsi' => 'Gaji ' . $bulan . '-' . $tahun,
+                ]);
+            } else {
+                $pengeluaran->update([
+                    'user_id' => Auth::id(),
+                    'tanggal' => $request->tanggal,
+                    'jumlah' => $request->jumlah,
+                ]);
+            }
 
             return ResponseFormatter::success(
                 $pengeluaran->load(['kategori', 'jenis']),
