@@ -55,14 +55,14 @@ class KoreksiController extends Controller
 
     public function read(request $request)
     {
-        $tahun = $request->input('tahun');
+        $year = $request->input('year');
         $koreksi = Koreksi::query();
         if ($request->sifat_koreksi) {
             $koreksi->where('sifat_koreksi', $request->sifat_koreksi);
         }
 
-        if ($tahun) {
-            $koreksi->whereYear('tahun', $tahun);
+        if ($year) {
+            $koreksi->where('tahun', $year);
         }
 
         $total = $koreksi->sum('jumlah');
