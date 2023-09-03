@@ -21,6 +21,7 @@ class Koreksi extends Model
         'sifat_koreksi',
         'jenis_koreksi',
         'jumlah',
+        'tahun',
     ];
 
     public function user()

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('sifat_koreksi');
             $table->string('jenis_koreksi');
             $table->integer('jumlah');
+            $table->integer('tahun');
             $table->timestamps();
         });
     }

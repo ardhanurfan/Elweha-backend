@@ -19,12 +19,14 @@ class KoreksiController extends Controller
                 'sifat_koreksi' => 'required | in:POSITIF,NEGATIF',
                 'jenis_koreksi' => 'required',
                 'jumlah' => 'required',
+                'tahun' => 'required',
             ]);
             $koreksi = Koreksi::create([
                 'user_id' => Auth::id(),
                 'sifat_koreksi' => $request->sifat_koreksi,
                 'jenis_koreksi' => $request->jenis_koreksi,
                 'jumlah' => $request->jumlah,
+                'tahun' => $request->tahun,
             ]);
             return ResponseFormatter::success(
                 $koreksi,
@@ -53,10 +55,16 @@ class KoreksiController extends Controller
 
     public function read(request $request)
     {
+        $tahun = $request->input('tahun');
         $koreksi = Koreksi::query();
         if ($request->sifat_koreksi) {
             $koreksi->where('sifat_koreksi', $request->sifat_koreksi);
         }
+
+        if ($tahun) {
+            $koreksi->whereYear('tahun', $tahun);
+        }
+
         $total = $koreksi->sum('jumlah');
         return ResponseFormatter::success(
             [
