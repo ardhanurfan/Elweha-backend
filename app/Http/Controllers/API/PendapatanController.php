@@ -83,8 +83,12 @@ class PendapatanController extends Controller
             });
         }
 
-        if ($month && $year) {
-            $pendapatan->whereMonth('tanggal', $month)->whereYear('tanggal', $year);
+        if ($month) {
+            $pendapatan->whereMonth('tanggal', $month);
+        }
+
+        if ($year) {
+            $pendapatan->whereYear('tanggal', $year);
         }
 
         if ($search) {

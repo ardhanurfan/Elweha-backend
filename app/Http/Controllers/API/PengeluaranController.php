@@ -153,8 +153,12 @@ class PengeluaranController extends Controller
             });
         }
 
-        if ($month && $year) {
-            $pengeluaran->whereMonth('tanggal', $month)->whereYear('tanggal', $year);
+        if ($month) {
+            $pengeluaran->whereMonth('tanggal', $month);
+        }
+
+        if ($year) {
+            $pengeluaran->whereYear('tanggal', $year);
         }
 
         if ($search) {
