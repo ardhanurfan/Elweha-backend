@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null')->onUpdate('cascade');
             $table->foreignId('rekan_id')->nullable()->constrained('rekan')->onDelete('cascade')->onUpdate('cascade');
-            $table->integer('biaya_jasa');
-            $table->integer('jumlah_akta')->default(0);
+            $table->bigInteger('biaya_jasa');
+            $table->bigInteger('jumlah_akta')->default(0);
             $table->integer('bulan')->default(0);
             $table->integer('tahun')->default(0);
             $table->timestamps();

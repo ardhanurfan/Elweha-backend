@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('gaji_id')->constrained('gaji')->onDelete('cascade')->onUpdate('cascade');
             $table->integer('bulan')->default(0);
             $table->integer('tahun')->default(0);
-            $table->integer('besar_gaji');
+            $table->bigInteger('besar_gaji');
             $table->integer('kehadiran_actual')->default(0);
             $table->integer('kehadiran_standart')->default(0);
             $table->integer('keterlambatan')->default(0);

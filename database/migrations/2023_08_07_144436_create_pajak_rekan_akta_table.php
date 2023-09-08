@@ -16,9 +16,9 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null')->onUpdate('cascade');
             $table->foreignId('rekan_id')->nullable()->constrained('rekan')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamp('tanggal');
-            $table->integer('no_awal');
-            $table->integer('no_akhir');
-            $table->integer('jumlah_akta');
+            $table->bigInteger('no_awal');
+            $table->bigInteger('no_akhir');
+            $table->bigInteger('jumlah_akta');
             $table->timestamps();
         });
     }

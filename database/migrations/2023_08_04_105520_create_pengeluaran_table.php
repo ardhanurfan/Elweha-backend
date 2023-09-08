@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('kategori_pengeluaran_id')->constrained('kategori_pengeluaran')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('jenis_pengeluaran_id')->constrained('jenis_pengeluaran')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamp('tanggal');
-            $table->integer('jumlah');
+            $table->bigInteger('jumlah');
             $table->text('deskripsi');
             $table->timestamps();
         });

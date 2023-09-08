@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null')->onUpdate('cascade');
             $table->string('sifat_koreksi');
             $table->string('jenis_koreksi');
-            $table->integer('jumlah');
+            $table->bigInteger('jumlah');
             $table->integer('tahun');
             $table->timestamps();
         });

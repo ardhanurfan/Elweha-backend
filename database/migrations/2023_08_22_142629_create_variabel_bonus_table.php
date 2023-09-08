@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('kehadiran_id')->constrained('kehadiran')->onDelete('cascade')->onUpdate('cascade');
             $table->string('nama_bonus');
-            $table->integer('besar_bonus');
-            $table->integer('jumlah');
-            $table->integer('total');
+            $table->bigInteger('besar_bonus');
+            $table->bigInteger('jumlah');
+            $table->bigInteger('total');
             $table->timestamps();
         });
     }
