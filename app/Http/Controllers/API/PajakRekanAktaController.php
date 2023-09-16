@@ -25,6 +25,33 @@ class PajakRekanAktaController extends Controller
                 'no_akhir' => 'required|integer|min:' . $request->no_awal,
             ]);
 
+            // cek nomor melebihi tanggal tidak
+            $data_sesudah = PajakRekanAkta::where('tanggal', '>', $request->tanggal)->orderBy('tanggal')->first();
+            if ($data_sesudah) {
+                if ($data_sesudah->no_awal < $request->no_akhir) {
+                    return ResponseFormatter::error(
+                        [
+                            'message' => 'Something when wrong',
+                            'error' => 'Nomor tidak sesuai dengan tanggal',
+                        ],
+                        'Create Akta Failed',
+                        404,
+                    );
+                }
+            } else {
+                $data_sebelum = PajakRekanAkta::orderBy('tanggal', 'DESC')->first();
+                if ($data_sebelum->no_akhir > $request->no_awal) {
+                    return ResponseFormatter::error(
+                        [
+                            'message' => 'Something when wrong',
+                            'error' => 'Nomor tidak sesuai dengan tanggal',
+                        ],
+                        'Create Akta Failed',
+                        404,
+                    );
+                }
+            }
+
             // Cek Ketersediaan Nomor Akta
             $sold = [];
             $tahun = date('Y', strtotime($request->tanggal));
@@ -132,7 +159,7 @@ class PajakRekanAktaController extends Controller
 
         return ResponseFormatter::success(
             [
-                'table' => $pajak_rekan_akta->orderBy('tanggal', 'DESC')->paginate($limit)
+                'table' => $pajak_rekan_akta->orderBy('tanggal', 'DESC')->orderBy('no_awal', 'DESC')->paginate($limit)
             ],
             'Get Akta Successfully'
         );
@@ -161,6 +188,33 @@ class PajakRekanAktaController extends Controller
                     'Edit Akta Failed',
                     404,
                 );
+            }
+
+            // cek nomor melebihi tanggal tidak
+            $data_sesudah = PajakRekanAkta::where('tanggal', '>', $request->tanggal)->orderBy('tanggal')->first();
+            if ($data_sesudah) {
+                if ($data_sesudah->no_awal < $request->no_akhir) {
+                    return ResponseFormatter::error(
+                        [
+                            'message' => 'Something when wrong',
+                            'error' => 'Nomor tidak sesuai dengan tanggal',
+                        ],
+                        'Create Akta Failed',
+                        404,
+                    );
+                }
+            } else {
+                $data_sebelum = PajakRekanAkta::orderBy('tanggal', 'DESC')->first();
+                if ($data_sebelum->no_akhir > $request->no_awal) {
+                    return ResponseFormatter::error(
+                        [
+                            'message' => 'Something when wrong',
+                            'error' => 'Nomor tidak sesuai dengan tanggal',
+                        ],
+                        'Create Akta Failed',
+                        404,
+                    );
+                }
             }
 
             // Cek Ketersediaan Nomor Akta, kecuali diirinya sendiri
@@ -370,7 +424,7 @@ class PajakRekanAktaController extends Controller
                 } else {
                     if (sizeof($temp) > 0) {
                         if (sizeof($temp) == 1) {
-                            $result = $result . $i . ", ";
+                            $result = $result . $i - 1 . ", ";
                         } else if (sizeof($temp) > 1) {
                             $result = $result . $temp[0] . "-" . $temp[sizeof($temp) - 1] . ", ";
                         }
