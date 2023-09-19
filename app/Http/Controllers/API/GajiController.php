@@ -221,7 +221,7 @@ class GajiController extends Controller
             ]);
 
             $terbaru = Kehadiran::orderBy('tahun', 'DESC')->orderBy('bulan', 'DESC')->first();
-            if ($terbaru->tahun == $request->tahun && $terbaru->bulan == $request->bulan) {
+            if (($terbaru->tahun == $request->tahun && $terbaru->bulan == $request->bulan) || !$kehadiran->first()) {
                 $gaji->update([
                     'besar_gaji' => $request->besar_gaji,
                 ]);

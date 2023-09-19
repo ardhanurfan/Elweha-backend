@@ -103,7 +103,7 @@ class RekanController extends Controller
                 'biaya_jasa' => $request->biaya_jasa,
             ]);
 
-            if (PajakRekan::orderBy('tahun', 'DESC')->first()->tahun == $request->tahun) {
+            if ((PajakRekan::orderBy('tahun', 'DESC')->first()->tahun == $request->tahun) || !$pajak_rekan->first()) {
                 $rekan->update([
                     'biaya_jasa' => $request->biaya_jasa,
                 ]);
