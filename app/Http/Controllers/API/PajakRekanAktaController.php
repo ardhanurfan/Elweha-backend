@@ -26,7 +26,8 @@ class PajakRekanAktaController extends Controller
             ]);
 
             // cek nomor melebihi tanggal tidak
-            $data_sesudah = PajakRekanAkta::where('tanggal', '>', $request->tanggal)->orderBy('tanggal')->first();
+            $tahun = date('Y', strtotime($request->tanggal));
+            $data_sesudah = PajakRekanAkta::where('tanggal', '>', $request->tanggal)->whereYear('tanggal', $tahun)->where('rekan_id', $request->rekan_id)->orderBy('tanggal')->first();
             if ($data_sesudah) {
                 if ($data_sesudah->no_awal < $request->no_akhir) {
                     return ResponseFormatter::error(
@@ -39,7 +40,7 @@ class PajakRekanAktaController extends Controller
                     );
                 }
             } else {
-                $data_sebelum = PajakRekanAkta::orderBy('tanggal', 'DESC')->first();
+                $data_sebelum = PajakRekanAkta::where('tanggal', '<', $request->tanggal)->orderBy('tanggal', 'DESC')->whereYear('tanggal', $tahun)->where('rekan_id', $request->rekan_id)->first();
                 if ($data_sebelum && $data_sebelum->no_akhir > $request->no_awal) {
                     return ResponseFormatter::error(
                         [
@@ -54,7 +55,6 @@ class PajakRekanAktaController extends Controller
 
             // Cek Ketersediaan Nomor Akta
             $sold = [];
-            $tahun = date('Y', strtotime($request->tanggal));
             $get_no = PajakRekanAkta::select('no_awal', 'no_akhir')->whereYear('tanggal', $tahun)->where('rekan_id', $request->rekan_id)->get();
             foreach ($get_no as $row) {
                 for ($i = $row->no_awal; $i <= $row->no_akhir; $i++) {
@@ -191,7 +191,8 @@ class PajakRekanAktaController extends Controller
             }
 
             // cek nomor melebihi tanggal tidak
-            $data_sesudah = PajakRekanAkta::where('tanggal', '>', $request->tanggal)->orderBy('tanggal')->first();
+            $tahun = date('Y', strtotime($request->tanggal));
+            $data_sesudah = PajakRekanAkta::where('tanggal', '>', $request->tanggal)->whereYear('tanggal', $tahun)->where('rekan_id', $request->rekan_id)->orderBy('tanggal')->first();
             if ($data_sesudah) {
                 if ($data_sesudah->no_awal < $request->no_akhir) {
                     return ResponseFormatter::error(
@@ -204,7 +205,7 @@ class PajakRekanAktaController extends Controller
                     );
                 }
             } else {
-                $data_sebelum = PajakRekanAkta::orderBy('tanggal', 'DESC')->first();
+                $data_sebelum = PajakRekanAkta::where('tanggal', '<', $request->tanggal)->orderBy('tanggal', 'DESC')->whereYear('tanggal', $tahun)->where('rekan_id', $request->rekan_id)->first();
                 if ($data_sebelum && $data_sebelum->no_akhir > $request->no_awal) {
                     return ResponseFormatter::error(
                         [
@@ -219,7 +220,6 @@ class PajakRekanAktaController extends Controller
 
             // Cek Ketersediaan Nomor Akta, kecuali diirinya sendiri
             $sold = [];
-            $tahun = date('Y', strtotime($request->tanggal));
             $get_no = PajakRekanAkta::select('no_awal', 'no_akhir')->where('id', '!=', $request->id)->whereYear('tanggal', $tahun)->where('rekan_id', $request->rekan_id)->get();
             foreach ($get_no as $row) {
                 for ($i = $row->no_awal; $i <= $row->no_akhir; $i++) {

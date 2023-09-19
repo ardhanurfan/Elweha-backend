@@ -119,9 +119,10 @@ class GajiController extends Controller
                 if ($gjAll['id'] == $gjGet['gaji_id']) {
                     array_push($data_per_bulan, [
                         'gaji_id' => $gjAll['id'],
+                        'kehadiran_id' => $gjGet['id'],
                         'nama_karyawan' => $gjAll['nama_karyawan'],
                         'jenis_gaji' => $gjAll['jenis_gaji'],
-                        'besar_gaji' => $gjAll['besar_gaji'],
+                        'besar_gaji' => $gjGet['besar_gaji'],
                         'bulan' => $gjGet['bulan'],
                         'tahun' => $gjGet['tahun'],
                         'kehadiran_actual' => $gjGet['kehadiran_actual'],
