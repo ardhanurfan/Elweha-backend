@@ -40,7 +40,7 @@ class PajakRekanAktaController extends Controller
                 }
             } else {
                 $data_sebelum = PajakRekanAkta::orderBy('tanggal', 'DESC')->first();
-                if ($data_sebelum->no_akhir > $request->no_awal) {
+                if ($data_sebelum && $data_sebelum->no_akhir > $request->no_awal) {
                     return ResponseFormatter::error(
                         [
                             'message' => 'Something when wrong',
@@ -205,7 +205,7 @@ class PajakRekanAktaController extends Controller
                 }
             } else {
                 $data_sebelum = PajakRekanAkta::orderBy('tanggal', 'DESC')->first();
-                if ($data_sebelum->no_akhir > $request->no_awal) {
+                if ($data_sebelum && $data_sebelum->no_akhir > $request->no_awal) {
                     return ResponseFormatter::error(
                         [
                             'message' => 'Something when wrong',
