@@ -21,6 +21,7 @@ class BarangController extends Controller
                 'nama_barang' => 'required|string|unique:barang,nama_barang',
                 'jumlah' => 'required|integer|min:0',
                 'satuan' => 'required|string',
+                'tanggal' => 'required|date',
             ]);
 
             $barang = Barang::create([
@@ -29,6 +30,7 @@ class BarangController extends Controller
                 'jenis_barang_id' => $request->jenis_barang_id,
                 'jumlah' => $request->jumlah,
                 'satuan' => $request->satuan,
+                'tanggal' => $request->tanggal,
             ]);
 
             return ResponseFormatter::success(
@@ -84,7 +86,7 @@ class BarangController extends Controller
         if ($month && $year) {
             $barang->select("barang.*")
                 ->join('pengambil_barang', 'barang.id', '=', 'pengambil_barang.barang_id')
-                ->whereMonth('tanggal', $month)->whereYear('tanggal', $year);
+                ->whereMonth('pengambil_barang.tanggal', $month)->whereYear('pengambil_barang.tanggal', $year);
         }
 
         if ($search) {
@@ -116,6 +118,7 @@ class BarangController extends Controller
                 'nama_barang' => 'required|string|unique:barang,nama_barang,' . $request->id,
                 'jumlah' => 'required|integer|min:0',
                 'satuan' => 'required|string',
+                'tanggal' => 'required|date',
             ]);
 
             $barang = Barang::find($request->id);
@@ -137,6 +140,7 @@ class BarangController extends Controller
                 'jenis_barang_id' => $request->jenis_barang_id,
                 'jumlah' => $request->jumlah,
                 'satuan' => $request->satuan,
+                'tanggal' => $request->tanggal,
             ]);
 
             return ResponseFormatter::success(

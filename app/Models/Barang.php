@@ -21,6 +21,7 @@ class Barang extends Model
         'nama_barang',
         'jumlah',
         'satuan',
+        'tanggal',
     ];
 
     public function jenis()

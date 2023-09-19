@@ -111,7 +111,7 @@ class PengambilBarangController extends Controller
         }
 
         if ($month && $year) {
-            $ambil->whereMonth('tanggal', $month)->whereYear('tanggal', $year);
+            $ambil->whereMonth('pengambil_barang.tanggal', $month)->whereYear('pengambil_barang.tanggal', $year);
         }
 
         if ($search) {
