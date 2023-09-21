@@ -26,6 +26,18 @@ class PengeluaranController extends Controller
                 'deskripsi' => 'required',
             ]);
 
+            $jenis = JenisPengeluaran::find($request->jenis_pengeluaran_id);
+            if (Auth::user()->role == "OFFICER" && $jenis->nama == "Biaya Gaji") {
+                return ResponseFormatter::error(
+                    [
+                        'message' => 'Something when wrong',
+                        'error' => "Anda tidak memiliki akses input",
+                    ],
+                    'Create Pengeluaran Failed',
+                    401,
+                );
+            }
+
             $pengeluaran = Pengeluaran::create([
                 'user_id' => Auth::id(),
                 'kategori_pengeluaran_id' => $request->kategori_pengeluaran_id,
@@ -209,6 +221,18 @@ class PengeluaranController extends Controller
                     ],
                     'Edit Pengeluaran Failed',
                     404,
+                );
+            }
+
+            $jenis = JenisPengeluaran::find($request->jenis_pengeluaran_id);
+            if (Auth::user()->role == "OFFICER" && $jenis->nama == "Biaya Gaji") {
+                return ResponseFormatter::error(
+                    [
+                        'message' => 'Something when wrong',
+                        'error' => "Anda tidak memiliki akses input",
+                    ],
+                    'Create Pengeluaran Failed',
+                    401,
                 );
             }
 
