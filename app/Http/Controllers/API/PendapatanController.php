@@ -96,11 +96,11 @@ class PendapatanController extends Controller
                 ->join('kategori_pendapatan', 'pendapatan.kategori_pendapatan_id', '=', 'kategori_pendapatan.id')
                 ->where(function ($query) use ($search) {
                     return $query
-                        ->orWhere('tanggal', 'like', '%' . $search . '%')
-                        ->orWhere('kategori_pendapatan.nama', 'like', '%' . $search . '%')
-                        ->orWhere('jumlah', 'like', '%' . $search . '%')
-                        ->orWhere('pengirim', 'like', '%' . $search . '%')
-                        ->orWhere('deskripsi', 'like', '%' . $search . '%');
+                        ->orWhere('tanggal', 'ILIKE', '%' . $search . '%')
+                        ->orWhere('kategori_pendapatan.nama', 'ILIKE', '%' . $search . '%')
+                        ->orWhere('jumlah', 'ILIKE', '%' . $search . '%')
+                        ->orWhere('pengirim', 'ILIKE', '%' . $search . '%')
+                        ->orWhere('deskripsi', 'ILIKE', '%' . $search . '%');
                 });
         }
 

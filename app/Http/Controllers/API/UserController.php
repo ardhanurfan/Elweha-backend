@@ -277,10 +277,10 @@ class UserController extends Controller
         if ($search) {
             $user->where(function ($query) use ($search) {
                 return $query
-                    ->orWhere('nama', 'like', '%' . $search . '%')
-                    ->orWhere('username', 'like', '%' . $search . '%')
-                    ->orWhere('email', 'like', '%' . $search . '%')
-                    ->orWhere('role', 'like', '%' . $search . '%');
+                    ->orWhere('nama', 'ILIKE', '%' . $search . '%')
+                    ->orWhere('username', 'ILIKE', '%' . $search . '%')
+                    ->orWhere('email', 'ILIKE', '%' . $search . '%')
+                    ->orWhere('role', 'ILIKE', '%' . $search . '%');
             });
         }
 

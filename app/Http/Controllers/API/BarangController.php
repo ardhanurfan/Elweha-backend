@@ -94,10 +94,10 @@ class BarangController extends Controller
                 ->join('jenis_barang', 'barang.jenis_barang_id', '=', 'jenis_barang.id')
                 ->where(function ($query) use ($search) {
                     return $query
-                        ->orWhere('jenis_barang.nama', 'like', '%' . $search . '%')
-                        ->orWhere('nama_barang', 'like', '%' . $search . '%')
-                        ->orWhere('barang.jumlah', 'like', '%' . $search . '%')
-                        ->orWhere('satuan', 'like', '%' . $search . '%');
+                        ->orWhere('jenis_barang.nama', 'ILIKE', '%' . $search . '%')
+                        ->orWhere('nama_barang', 'ILIKE', '%' . $search . '%')
+                        ->orWhere('barang.jumlah', 'ILIKE', '%' . $search . '%')
+                        ->orWhere('satuan', 'ILIKE', '%' . $search . '%');
                 });
         }
 

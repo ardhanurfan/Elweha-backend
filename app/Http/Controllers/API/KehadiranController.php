@@ -20,7 +20,7 @@ class KehadiranController extends Controller
 
             foreach ($data_input as $data) {
                 // Search berdasar nama
-                $karyawan = Gaji::where('nama_karyawan', 'like', '%' . $data['nama_karyawan'] . '%')->first();
+                $karyawan = Gaji::where('nama_karyawan', 'ILIKE', '%' . $data['nama_karyawan'] . '%')->first();
 
                 if ($karyawan) {
                     // hapus 00

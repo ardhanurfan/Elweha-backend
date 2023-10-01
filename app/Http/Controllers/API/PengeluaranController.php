@@ -179,11 +179,11 @@ class PengeluaranController extends Controller
                 ->join('jenis_pengeluaran', 'pengeluaran.jenis_pengeluaran_id', '=', 'jenis_pengeluaran.id')
                 ->where(function ($query) use ($search) {
                     return $query
-                        ->orWhere('tanggal', 'like', '%' . $search . '%')
-                        ->orWhere('kategori_pengeluaran.nama', 'like', '%' . $search . '%')
-                        ->orWhere('jenis_pengeluaran.nama', 'like', '%' . $search . '%')
-                        ->orWhere('jumlah', 'like', '%' . $search . '%')
-                        ->orWhere('deskripsi', 'like', '%' . $search . '%');
+                        ->orWhere('tanggal', 'ILIKE', '%' . $search . '%')
+                        ->orWhere('kategori_pengeluaran.nama', 'ILIKE', '%' . $search . '%')
+                        ->orWhere('jenis_pengeluaran.nama', 'ILIKE', '%' . $search . '%')
+                        ->orWhere('jumlah', 'ILIKE', '%' . $search . '%')
+                        ->orWhere('deskripsi', 'ILIKE', '%' . $search . '%');
                 });
         }
 

@@ -145,7 +145,7 @@ class PajakRekanController extends Controller
         if ($search) {
             $rekan->where(
                 function ($query) use ($search) {
-                    return $query->orWhere('nama', 'like', '%' . $search . '%');
+                    return $query->orWhere('nama', 'ILIKE', '%' . $search . '%');
                 }
             );
         }

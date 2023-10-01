@@ -87,21 +87,21 @@ class GajiController extends Controller
         if ($jenis) {
             $gaji->where(function ($query) use ($jenis) {
                 foreach ($jenis as $value) {
-                    $query->orWhere('jenis_gaji', 'like', $value);
+                    $query->orWhere('jenis_gaji', 'ILIKE', $value);
                 }
                 return $query;
             });
             $gaji_all->where(function ($query) use ($jenis) {
                 foreach ($jenis as $value) {
-                    $query->orWhere('jenis_gaji', 'like', $value);
+                    $query->orWhere('jenis_gaji', 'ILIKE', $value);
                 }
                 return $query;
             });
         }
 
         if ($search) {
-            $gaji->where('nama_karyawan', 'like', '%' . $search . '%');
-            $gaji_all->where('nama_karyawan', 'like', '%' . $search . '%');
+            $gaji->where('nama_karyawan', 'ILIKE', '%' . $search . '%');
+            $gaji_all->where('nama_karyawan', 'ILIKE', '%' . $search . '%');
         }
 
         if ($month && $year) {

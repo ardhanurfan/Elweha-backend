@@ -126,12 +126,12 @@ class PengambilBarangController extends Controller
 
             $ambil->where(function ($query) use ($search) {
                 return $query
-                    ->orWhere('tanggal', 'like', '%' . $search . '%')
-                    ->orWhere('nama_pengambil', 'like', '%' . $search . '%')
-                    ->orWhere('nama_barang', 'like', '%' . $search . '%')
-                    ->orWhere('jenis_barang.nama', 'like', '%' . $search . '%')
-                    ->orWhere('pengambil_barang.jumlah', 'like', '%' . $search . '%')
-                    ->orWhere('barang.satuan', 'like', '%' . $search . '%');
+                    ->orWhere('pengambil_barang.tanggal', 'ILIKE', '%' . $search . '%')
+                    ->orWhere('nama_pengambil', 'ILIKE', '%' . $search . '%')
+                    ->orWhere('nama_barang', 'ILIKE', '%' . $search . '%')
+                    ->orWhere('jenis_barang.nama', 'ILIKE', '%' . $search . '%')
+                    ->orWhere('pengambil_barang.jumlah', 'ILIKE', '%' . $search . '%')
+                    ->orWhere('barang.satuan', 'ILIKE', '%' . $search . '%');
             });
         }
 
