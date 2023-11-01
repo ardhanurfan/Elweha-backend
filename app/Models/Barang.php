@@ -19,6 +19,7 @@ class Barang extends Model
         'user_id',
         'jenis_barang_id',
         'nama_barang',
+        'kategori_barang',
         'jumlah',
         'satuan',
         'tanggal',

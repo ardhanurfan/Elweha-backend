@@ -19,6 +19,7 @@ class BarangController extends Controller
             $request->validate([
                 'jenis_barang_id' => 'required',
                 'nama_barang' => 'required|string|unique:barang,nama_barang',
+                'kategori_barang' => 'required|string',
                 'jumlah' => 'required|integer|min:0',
                 'satuan' => 'required|string',
                 'tanggal' => 'required|date',
@@ -27,6 +28,7 @@ class BarangController extends Controller
             $barang = Barang::create([
                 'user_id' => Auth::id(),
                 'nama_barang' => $request->nama_barang,
+                'kategori_barang' => $request->kategori_barang,
                 'jenis_barang_id' => $request->jenis_barang_id,
                 'jumlah' => $request->jumlah,
                 'satuan' => $request->satuan,
@@ -62,6 +64,7 @@ class BarangController extends Controller
     public function read(Request $request)
     {
         $user_id = $request->input('user_id');
+        $kategori_barang = $request->input('kategori_barang');
         $limit = $request->input('limit');
         $jenis_id = $request->input('jenis_id', []);
         $month = $request->input('month');
@@ -72,6 +75,10 @@ class BarangController extends Controller
 
         if ($user_id) {
             $barang->where('user_id', $user_id);
+        }
+
+        if ($kategori_barang) {
+            $barang->where('kategori_barang', $kategori_barang);
         }
 
         if ($jenis_id) {
@@ -115,6 +122,7 @@ class BarangController extends Controller
             $request->validate([
                 'id' => 'required',
                 'jenis_barang_id' => 'required',
+                'kategori_barang' => 'required',
                 'nama_barang' => 'required|string|unique:barang,nama_barang,' . $request->id,
                 'jumlah' => 'required|integer|min:0',
                 'satuan' => 'required|string',
@@ -137,6 +145,7 @@ class BarangController extends Controller
             $barang->update([
                 'user_id' => Auth::id(),
                 'nama_barang' => $request->nama_barang,
+                'kategoru_barang' => $request->kategori_barang,
                 'jenis_barang_id' => $request->jenis_barang_id,
                 'jumlah' => $request->jumlah,
                 'satuan' => $request->satuan,
