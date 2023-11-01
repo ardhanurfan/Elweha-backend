@@ -122,7 +122,6 @@ class BarangController extends Controller
             $request->validate([
                 'id' => 'required',
                 'jenis_barang_id' => 'required',
-                'kategori_barang' => 'required',
                 'nama_barang' => 'required|string|unique:barang,nama_barang,' . $request->id,
                 'jumlah' => 'required|integer|min:0',
                 'satuan' => 'required|string',
@@ -145,7 +144,6 @@ class BarangController extends Controller
             $barang->update([
                 'user_id' => Auth::id(),
                 'nama_barang' => $request->nama_barang,
-                'kategoru_barang' => $request->kategori_barang,
                 'jenis_barang_id' => $request->jenis_barang_id,
                 'jumlah' => $request->jumlah,
                 'satuan' => $request->satuan,
