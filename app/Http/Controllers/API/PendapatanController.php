@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Models\KategoriPendapatan;
 use App\Models\Pendapatan;
 use Exception;
 use Illuminate\Http\Request;
@@ -53,6 +54,55 @@ class PendapatanController extends Controller
                     'error' => $error,
                 ],
                 'Create Pendapatan Failed',
+                500,
+            );
+        }
+    }
+
+    //UPLOAD
+    public function upload(Request $request)
+    {
+        try {
+            $data_input = $request->json()->all();
+
+            foreach ($data_input as $data) {
+                $kategori = KategoriPendapatan::where('nama', 'LIKE', '%' . $data['kategori'] . '%')->first();
+                if(!$kategori){
+                    $kategori = KategoriPendapatan::create([
+                        'nama' => $data['kategori']
+                    ]);
+                }
+                $pendapatan = Pendapatan::create([
+                    'user_id' => Auth::id(),
+                    'kategori_pendapatan_id' => $kategori->id,
+                    'tanggal' => $data['tanggal'],
+                    'jumlah' => $data['jumlah'],
+                    'pengirim' => $data['pengirim'],
+                    'deskripsi' => $data['deskripsi'],
+                ]);
+
+            }
+
+            return ResponseFormatter::success(
+                $pendapatan->get(),
+                'Upload Pendapatan Successfully'
+            );
+        } catch (ValidationException $error) {
+            return ResponseFormatter::error(
+                [
+                    'message' => 'Something when wrong',
+                    'error' => array_values($error->errors())[0][0],
+                ],
+                'Upload Pendapatan Failed',
+                400,
+            );
+        } catch (Exception $error) {
+            return ResponseFormatter::error(
+                [
+                    'message' => 'Something when wrong',
+                    'error' => $error,
+                ],
+                'Upload Pendapatan Failed',
                 500,
             );
         }

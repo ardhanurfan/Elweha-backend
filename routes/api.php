@@ -53,6 +53,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('pendapatan', [PendapatanController::class, 'read']);
     Route::post('update-pendapatan', [PendapatanController::class, 'update']);
     Route::post('delete-pendapatan', [PendapatanController::class, 'delete']);
+    Route::post('upload-pendapatan',[PendapatanController::class,'upload']);
 
     // Kategori Pengeluaran
     Route::post('kategori-pengeluaran', [KategoriPengeluaranController::class, 'create']);
@@ -72,6 +73,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('pengeluaran', [PengeluaranController::class, 'read']);
     Route::post('update-pengeluaran', [PengeluaranController::class, 'update']);
     Route::post('delete-pengeluaran', [PengeluaranController::class, 'delete']);
+    Route::post('upload-pengeluaran',[PengeluaranController::class,'upload']);
 
     // Rekan
     Route::post('rekan', [RekanController::class, 'create']);

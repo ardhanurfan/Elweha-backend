@@ -72,6 +72,63 @@ class PengeluaranController extends Controller
         }
     }
 
+    //UPLOAD
+    public function upload(Request $request)
+    {
+        try {
+            $data_input = $request->json()->all();
+
+            foreach ($data_input as $data) {
+                $kategori = KategoriPengeluaran::where('nama', 'LIKE', '%' . $data['kategori'] . '%')->first();
+                $jenis = JenisPengeluaran::where('nama', 'LIKE', '%' . $data['jenis'] . '%')->first();
+
+                if (!$kategori) {
+                    $kategori = KategoriPengeluaran::create([
+                        'nama' => $data['kategori']
+                    ]);
+                }
+
+                if (!$jenis) {
+                    $jenis = JenisPengeluaran::create([
+                        'nama' => $data['jenis']
+                    ]);
+                }
+
+                $pengeluaran = Pengeluaran::create([
+                    'user_id' => Auth::id(),
+                    'kategori_pengeluaran_id' => $kategori->id,
+                    'jenis_pengeluaran_id' => $jenis->id,
+                    'tanggal' => $data['tanggal'],
+                    'jumlah' => $data['jumlah'],
+                    'deskripsi' => $data['deskripsi'],
+                ]);
+            }
+
+            return ResponseFormatter::success(
+                $pengeluaran->get(),
+                'Upload pengeluaran Successfully'
+            );
+        } catch (ValidationException $error) {
+            return ResponseFormatter::error(
+                [
+                    'message' => 'Something when wrong',
+                    'error' => array_values($error->errors())[0][0],
+                ],
+                'Upload pengeluaran Failed',
+                400,
+            );
+        } catch (Exception $error) {
+            return ResponseFormatter::error(
+                [
+                    'message' => 'Something when wrong',
+                    'error' => $error,
+                ],
+                'Upload pengeluaran Failed',
+                500,
+            );
+        }
+    }
+
     // CREATE Link Gaji
     public function createLinkGaji(Request $request)
     {
