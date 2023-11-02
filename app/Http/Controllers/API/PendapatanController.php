@@ -66,7 +66,7 @@ class PendapatanController extends Controller
             $data_input = $request->json()->all();
 
             foreach ($data_input as $data) {
-                $kategori = KategoriPendapatan::where('nama', 'LIKE', '%' . $data['kategori'] . '%')->first();
+                $kategori = KategoriPendapatan::where('nama', 'ILIKE', '%' . $data['kategori'] . '%')->first();
                 if(!$kategori){
                     $kategori = KategoriPendapatan::create([
                         'nama' => $data['kategori']

@@ -79,8 +79,8 @@ class PengeluaranController extends Controller
             $data_input = $request->json()->all();
 
             foreach ($data_input as $data) {
-                $kategori = KategoriPengeluaran::where('nama', 'LIKE', '%' . $data['kategori'] . '%')->first();
-                $jenis = JenisPengeluaran::where('nama', 'LIKE', '%' . $data['jenis'] . '%')->first();
+                $kategori = KategoriPengeluaran::where('nama', 'ILIKE', '%' . $data['kategori'] . '%')->first();
+                $jenis = JenisPengeluaran::where('nama', 'ILIKE', '%' . $data['jenis'] . '%')->first();
 
                 if (!$kategori) {
                     $kategori = KategoriPengeluaran::create([
