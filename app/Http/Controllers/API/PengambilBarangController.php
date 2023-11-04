@@ -47,6 +47,7 @@ class PengambilBarangController extends Controller
             }
 
             $barang->update([
+                'tanggal' =>  $request->tanggal,
                 'jumlah' => $barang->jumlah - $request->jumlah
             ]);
 
